@@ -14,7 +14,9 @@
     <div class="auth-title">Set new password</div>
     <div class="auth-sub" id="reset-sub">Choose a password for your admin account.</div>
 
-    <form id="reset-form">
+    <div id="reset-waiting" style="text-align:center;padding:16px 0;color:var(--ink3);font-size:.875rem;">Verifying link…</div>
+
+    <form id="reset-form" style="display:none;">
       <label class="auth-label" for="new-password">New password</label>
       <input id="new-password" class="auth-input" type="password" placeholder="••••••••" autocomplete="new-password" minlength="8" required>
       <label class="auth-label" for="confirm-password">Confirm password</label>
@@ -36,12 +38,25 @@
   const { createClient } = supabase;
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
-  // Supabase puts the session tokens in the URL hash after a password reset link click
+  // Wait for PASSWORD_RECOVERY event before showing the form
   sb.auth.onAuthStateChange((event) => {
     if (event === 'PASSWORD_RECOVERY') {
-      document.getElementById('reset-sub').textContent = 'You\'re verified. Choose a new password.';
+      document.getElementById('reset-waiting').style.display = 'none';
+      document.getElementById('reset-sub').textContent = 'Verified. Choose a new password.';
+      document.getElementById('reset-form').style.display = 'block';
     }
   });
+
+  // Timeout fallback — if no event fires, the link is invalid/expired
+  setTimeout(() => {
+    const waiting = document.getElementById('reset-waiting');
+    if (waiting.style.display !== 'none') {
+      waiting.style.display = 'none';
+      const err = document.getElementById('reset-error');
+      err.textContent = 'This link has expired or is invalid. Request a new one from the Supabase dashboard.';
+      err.style.display = 'block';
+    }
+  }, 5000);
 
   document.getElementById('reset-form').addEventListener('submit', async e => {
     e.preventDefault();
