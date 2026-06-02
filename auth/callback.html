@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opening PuzzleBee…</title>
+  <style>
+    body { font-family: -apple-system, sans-serif; background: #FBF7EE; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+    p { color: #8B7C63; font-size: 1rem; }
+  </style>
+  <script>
+    // Forward all URL params and hash to the app's deep link scheme
+    const search = window.location.search;
+    const hash   = window.location.hash;
+    window.location.replace('puzzlebee://auth/callback' + search + hash);
+  </script>
+</head>
+<body>
+  <p>Opening PuzzleBee…</p>
+</body>
+</html>
