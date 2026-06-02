@@ -80,53 +80,21 @@ async function enterApp(user) {
   navigateTo('queue');
 }
 
-// Email step
-$('auth-email-form').addEventListener('submit', async e => {
+$('auth-form').addEventListener('submit', async e => {
   e.preventDefault();
-  const email = $('auth-email-input').value.trim();
-  if (!email) return;
-  $('auth-email-btn').disabled = true;
-  $('auth-email-btn').textContent = 'Sending…';
+  const email    = $('auth-email-input').value.trim();
+  const password = $('auth-password-input').value;
+  $('auth-submit-btn').disabled = true;
+  $('auth-submit-btn').textContent = 'Signing in…';
   $('auth-error').style.display = 'none';
 
-  const { error } = await sb.auth.signInWithOtp({ email, options: { shouldCreateUser: false } });
+  const { error } = await sb.auth.signInWithPassword({ email, password });
   if (error) {
     $('auth-error').textContent = error.message;
     $('auth-error').style.display = 'block';
-    $('auth-email-btn').disabled = false;
-    $('auth-email-btn').textContent = 'Send code';
-    return;
+    $('auth-submit-btn').disabled = false;
+    $('auth-submit-btn').textContent = 'Sign in';
   }
-  $('auth-email-step').style.display = 'none';
-  $('auth-otp-step').style.display = 'block';
-  $('auth-otp-email-label').textContent = email;
-  $('auth-otp-input').focus();
-});
-
-// OTP step
-$('auth-otp-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const email = $('auth-email-input').value.trim();
-  const token = $('auth-otp-input').value.trim();
-  $('auth-otp-btn').disabled = true;
-  $('auth-otp-btn').textContent = 'Verifying…';
-  $('auth-error').style.display = 'none';
-
-  const { error } = await sb.auth.verifyOtp({ email, token, type: 'email' });
-  if (error) {
-    $('auth-error').textContent = error.message;
-    $('auth-error').style.display = 'block';
-    $('auth-otp-btn').disabled = false;
-    $('auth-otp-btn').textContent = 'Verify';
-  }
-});
-
-$('auth-back-btn').addEventListener('click', () => {
-  $('auth-otp-step').style.display = 'none';
-  $('auth-email-step').style.display = 'block';
-  $('auth-error').style.display = 'none';
-  $('auth-email-btn').disabled = false;
-  $('auth-email-btn').textContent = 'Send code';
 });
 
 $('sign-out-btn').addEventListener('click', () => sb.auth.signOut());

@@ -15,29 +15,13 @@
     <div class="auth-title">PuzzleBee Admin</div>
     <div class="auth-sub">Sign in to manage the hive.</div>
 
-    <!-- Step 1: Email -->
-    <div id="auth-email-step">
-      <form id="auth-email-form">
-        <label class="auth-label" for="auth-email-input">Email address</label>
-        <input id="auth-email-input" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" required>
-        <button id="auth-email-btn" class="auth-btn" type="submit">Send code</button>
-      </form>
-    </div>
-
-    <!-- Step 2: OTP -->
-    <div id="auth-otp-step" style="display:none;">
-      <div class="auth-msg">
-        We sent a 6-digit code to <strong id="auth-otp-email-label"></strong>.
-      </div>
-      <form id="auth-otp-form">
-        <label class="auth-label" for="auth-otp-input">Verification code</label>
-        <input id="auth-otp-input" class="auth-input" type="text" placeholder="123456" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
-        <button id="auth-otp-btn" class="auth-btn" type="submit">Verify</button>
-      </form>
-      <p style="margin-top:12px;text-align:center;">
-        <button id="auth-back-btn" style="background:none;border:none;color:var(--honey-deep);font-size:.8125rem;cursor:pointer;font-weight:600;">← Use a different email</button>
-      </p>
-    </div>
+    <form id="auth-form">
+      <label class="auth-label" for="auth-email-input">Email address</label>
+      <input id="auth-email-input" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" required>
+      <label class="auth-label" for="auth-password-input">Password</label>
+      <input id="auth-password-input" class="auth-input" type="password" placeholder="••••••••" autocomplete="current-password" required>
+      <button id="auth-submit-btn" class="auth-btn" type="submit">Sign in</button>
+    </form>
 
     <div id="auth-error" class="auth-error" style="display:none;"></div>
   </div>
