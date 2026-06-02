@@ -81,21 +81,21 @@ async function enterApp(user) {
   navigateTo('queue');
 }
 
-$('apple-signin-btn').addEventListener('click', async () => {
-  $('apple-signin-btn').style.opacity = '0.6';
-  $('apple-signin-btn').disabled = true;
+$('google-signin-btn').addEventListener('click', async () => {
+  $('google-signin-btn').style.opacity = '0.6';
+  $('google-signin-btn').disabled = true;
   $('auth-error').style.display = 'none';
 
   const { error } = await sb.auth.signInWithOAuth({
-    provider: 'apple',
+    provider: 'google',
     options: { redirectTo: 'https://puzzlebee.app/admin/' },
   });
 
   if (error) {
     $('auth-error').textContent = error.message;
     $('auth-error').style.display = 'block';
-    $('apple-signin-btn').style.opacity = '1';
-    $('apple-signin-btn').disabled = false;
+    $('google-signin-btn').style.opacity = '1';
+    $('google-signin-btn').disabled = false;
   }
 });
 
