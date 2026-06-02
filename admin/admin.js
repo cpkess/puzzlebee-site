@@ -1,7 +1,7 @@
 /* PuzzleBee Admin Panel */
 
 const SUPABASE_URL = 'https://slepfovcxclwpcuqmhql.supabase.co';
-const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNsZXBmb3ZjeGNsd3BjdXFtaHFsIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDYxMzE4NTEsImV4cCI6MjA2MTcwNzg1MX0.7xVtHFMpWRrqkjUFVLSwvGVJKJOjWLfAQ9ZAy1LlJ7o';
+const SUPABASE_ANON_KEY = 'sb_publishable_Hhyy2Et18FafeDZjZrn4kg_KdFeN7AF';
 
 const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
