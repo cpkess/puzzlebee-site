@@ -1,0 +1,193 @@
+/* PuzzleBee — shared marketing stylesheet */
+
+:root {
+  --ink:       #211A12;
+  --ink2:      #5C4D38;
+  --ink3:      #8B7C63;
+  --ink4:      #B8A890;
+  --cream:     #FBF7EE;
+  --cream50:   #F5EFE0;
+  --cream100:  #EDE4D0;
+  --honey:     #E8A93C;
+  --honey-deep:#C4831A;
+  --honey-soft:#FFF3D6;
+  --sage:      #6B7B5A;
+  --border:    rgba(90,70,40,0.12);
+  --radius:    16px;
+  --radius-sm: 10px;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  background: var(--cream);
+  color: var(--ink);
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Typography ── */
+h1 { font-size: clamp(2rem, 5vw, 3.25rem); font-weight: 800; letter-spacing: -0.04em; line-height: 1.1; }
+h2 { font-size: clamp(1.5rem, 3vw, 2rem); font-weight: 700; letter-spacing: -0.03em; line-height: 1.2; }
+h3 { font-size: 1.125rem; font-weight: 700; letter-spacing: -0.02em; }
+p  { color: var(--ink2); }
+a  { color: var(--honey-deep); text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── Layout ── */
+.container { max-width: 1080px; margin: 0 auto; padding: 0 24px; }
+.container--narrow { max-width: 720px; margin: 0 auto; padding: 0 24px; }
+
+section { padding: 80px 0; }
+section + section { border-top: 1px solid var(--border); }
+
+/* ── Nav ── */
+.nav {
+  position: sticky; top: 0; z-index: 100;
+  background: rgba(251,247,238,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+}
+.nav__inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; align-items: center; justify-content: space-between;
+  height: 60px;
+}
+.nav__wordmark {
+  font-size: 1.1rem; font-weight: 800; letter-spacing: -0.03em;
+  color: var(--ink); text-decoration: none; display: flex; align-items: center; gap: 8px;
+}
+.nav__wordmark:hover { text-decoration: none; }
+.nav__links { display: flex; align-items: center; gap: 28px; }
+.nav__links a { font-size: 0.875rem; font-weight: 600; color: var(--ink2); }
+.nav__links a:hover { color: var(--ink); text-decoration: none; }
+.nav__cta {
+  background: var(--ink); color: var(--cream) !important;
+  padding: 8px 18px; border-radius: 999px; font-size: 0.8125rem !important;
+}
+.nav__cta:hover { background: var(--ink2); text-decoration: none !important; }
+
+/* ── Buttons ── */
+.btn {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 700; font-size: 0.9375rem;
+  padding: 14px 28px; border-radius: var(--radius);
+  cursor: pointer; text-decoration: none; border: none;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.btn:hover { opacity: 0.88; transform: translateY(-1px); text-decoration: none; }
+.btn--honey { background: var(--honey); color: var(--ink); }
+.btn--ink   { background: var(--ink); color: var(--cream); }
+.btn--ghost { background: transparent; color: var(--ink); border: 1.5px solid var(--border); }
+
+/* App Store badge */
+.badge-appstore {
+  display: inline-flex; align-items: center; gap: 10px;
+  background: var(--ink); color: var(--cream);
+  padding: 12px 24px; border-radius: var(--radius-sm);
+  font-size: 0.8125rem; font-weight: 600;
+  text-decoration: none; transition: opacity 0.15s;
+}
+.badge-appstore:hover { opacity: 0.85; text-decoration: none; }
+.badge-appstore__sub { display: block; font-size: 0.625rem; font-weight: 400; opacity: 0.7; line-height: 1; margin-bottom: 2px; }
+.badge-appstore__main { display: block; font-size: 1rem; font-weight: 700; line-height: 1; }
+
+/* ── Tag / pill ── */
+.tag {
+  display: inline-block;
+  padding: 4px 10px; border-radius: 999px;
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.05em; text-transform: uppercase;
+  background: var(--honey-soft); color: var(--honey-deep);
+}
+
+/* ── Cards ── */
+.card {
+  background: var(--cream50);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px;
+}
+
+/* ── Feature grid ── */
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 20px;
+}
+.feature-card {
+  background: var(--cream50);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 28px 24px;
+}
+.feature-card__icon {
+  font-size: 2rem; margin-bottom: 14px; display: block;
+}
+.feature-card__title {
+  font-size: 1rem; font-weight: 700; margin-bottom: 6px; color: var(--ink);
+}
+.feature-card__body {
+  font-size: 0.875rem; color: var(--ink3); line-height: 1.55;
+}
+
+/* ── Screenshot placeholder ── */
+.phone-mockup {
+  width: 200px; aspect-ratio: 9/19.5;
+  background: var(--cream100);
+  border: 1.5px solid var(--border);
+  border-radius: 36px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.75rem; color: var(--ink4);
+  flex-shrink: 0;
+  overflow: hidden;
+}
+.phone-mockup img { width: 100%; height: 100%; object-fit: cover; border-radius: inherit; }
+
+/* ── Section header ── */
+.section-label {
+  display: inline-block;
+  font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--honey-deep); margin-bottom: 14px;
+}
+.section-title { margin-bottom: 16px; }
+.section-body  { color: var(--ink2); font-size: 1.0625rem; line-height: 1.65; max-width: 560px; }
+
+/* ── Footer ── */
+.footer {
+  background: var(--cream50);
+  border-top: 1px solid var(--border);
+  padding: 40px 24px;
+}
+.footer__inner {
+  max-width: 1080px; margin: 0 auto;
+  display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 16px;
+}
+.footer__wordmark {
+  font-size: 1rem; font-weight: 800; letter-spacing: -0.03em; color: var(--ink);
+  text-decoration: none; display: flex; align-items: center; gap: 6px;
+}
+.footer__links { display: flex; flex-wrap: wrap; gap: 20px; }
+.footer__links a { font-size: 0.8125rem; color: var(--ink3); }
+.footer__links a:hover { color: var(--ink); text-decoration: none; }
+.footer__copy { font-size: 0.75rem; color: var(--ink4); }
+
+/* ── Prose (for legal pages) ── */
+.prose h1 { margin-bottom: 8px; }
+.prose .updated { font-size: 0.875rem; color: var(--ink3); margin-bottom: 40px; }
+.prose h2 { font-size: 1.125rem; font-weight: 700; margin: 36px 0 10px; }
+.prose p  { margin-bottom: 14px; font-size: 0.9375rem; line-height: 1.75; }
+.prose ul { padding-left: 20px; margin-bottom: 14px; color: var(--ink2); }
+.prose ul li { margin-bottom: 6px; font-size: 0.9375rem; line-height: 1.7; }
+
+/* ── Color swatch ── */
+.swatch { width: 48px; height: 48px; border-radius: 10px; border: 1px solid var(--border); display: inline-block; }
+
+/* ── Responsive ── */
+@media (max-width: 640px) {
+  section { padding: 56px 0; }
+  .nav__links .nav__link--hide { display: none; }
+}

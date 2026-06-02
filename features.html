@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Features — PuzzleBee</title>
+  <meta name="description" content="Everything in PuzzleBee: scan, track, time, share, discover. A full walkthrough of features built for jigsaw puzzle collectors.">
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    .page-hero { padding: 72px 0 56px; }
+    .feature-row {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+      padding: 64px 0;
+    }
+    .feature-row--flip { direction: rtl; }
+    .feature-row--flip > * { direction: ltr; }
+    .feature-row__text h2 { margin-bottom: 14px; }
+    .feature-row__text p { margin-bottom: 14px; font-size: 1.0625rem; line-height: 1.7; }
+    .feature-row__visual {
+      display: flex; justify-content: center; align-items: center;
+      background: var(--cream50); border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px; min-height: 280px;
+    }
+    .feature-detail { display: flex; flex-direction: column; gap: 12px; width: 100%; }
+    .detail-item {
+      background: white; border: 1px solid var(--border); border-radius: 12px;
+      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
+    }
+    .detail-item__icon { font-size: 1.25rem; flex-shrink: 0; }
+    .detail-item__text { font-size: 0.875rem; font-weight: 600; color: var(--ink); }
+    .detail-item__sub  { font-size: 0.75rem; color: var(--ink3); margin-top: 2px; }
+    @media(max-width:700px) {
+      .feature-row { grid-template-columns: 1fr; gap: 32px; }
+      .feature-row--flip { direction: ltr; }
+    }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__wordmark">🐝 PuzzleBee</a>
+      <div class="nav__links">
+        <a href="/features.html" class="nav__link--hide" style="color:var(--ink);font-weight:700;">Features</a>
+        <a href="/about.html" class="nav__link--hide">About</a>
+        <a href="/press.html" class="nav__link--hide">Press</a>
+        <a href="https://apps.apple.com/app/puzzlebee" class="nav__cta">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="page-hero" style="border-top:none;">
+    <div class="container--narrow">
+      <span class="section-label">Features</span>
+      <h1>Built for the way<br>collectors actually puzzle.</h1>
+      <p class="section-body" style="margin-top:16px;font-size:1.125rem;">Every feature in PuzzleBee exists because puzzle collectors asked for it, or because we needed it ourselves.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="feature-row">
+        <div class="feature-row__text">
+          <span class="section-label">Scanning</span>
+          <h2>Scan any puzzle box in seconds</h2>
+          <p>Open the scanner, point it at the barcode on any puzzle box, and PuzzleBee identifies it instantly. Title, brand, piece count, difficulty, and box art — all pulled in automatically.</p>
+          <p>If the puzzle isn't in our database yet, you can submit it with photos. Once approved, it's available to every PuzzleBee user.</p>
+        </div>
+        <div class="feature-row__visual">
+          <div class="feature-detail">
+            <div class="detail-item"><span class="detail-item__icon">📦</span><div><div class="detail-item__text">Ravensburger — Starry Night</div><div class="detail-item__sub">1000 pc · Medium</div></div></div>
+            <div class="detail-item" style="background:var(--honey-soft);border-color:rgba(232,169,60,.3);"><span class="detail-item__icon">✅</span><div><div class="detail-item__text">Found in database</div><div class="detail-item__sub">Tap to add to collection</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="feature-row feature-row--flip">
+        <div class="feature-row__text">
+          <span class="section-label">Collection</span>
+          <h2>Your collection, finally organized</h2>
+          <p>Every puzzle you own lives in PuzzleBee. Mark it as on the shelf, actively being solved, or complete. Filter your collection by status and see your history at a glance.</p>
+          <p>Each puzzle shows its status, your solve time, and how your time compares to the community average.</p>
+        </div>
+        <div class="feature-row__visual">
+          <div class="feature-detail">
+            <div class="detail-item"><span class="detail-item__icon">🗂</span><div><div class="detail-item__text">47 puzzles in collection</div><div class="detail-item__sub">12 complete · 2 in progress · 33 shelf</div></div></div>
+            <div class="detail-item"><span class="detail-item__icon">✅</span><div><div class="detail-item__text">Solved 12 puzzles</div><div class="detail-item__sub">Total: 187 hours solving</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="feature-row">
+        <div class="feature-row__text">
+          <span class="section-label">Timer</span>
+          <h2>A timer that understands puzzle sessions</h2>
+          <p>Real puzzle solves happen across multiple sittings. PuzzleBee's timer works the way you do — start it when you sit down, pause it when you get up, and it accumulates an accurate total.</p>
+          <p>When you're done, mark it solved and see your time alongside the community average for that puzzle.</p>
+        </div>
+        <div class="feature-row__visual">
+          <div class="feature-detail">
+            <div class="detail-item"><span class="detail-item__icon">⏱</span><div><div class="detail-item__text">Current session: 1h 23m</div><div class="detail-item__sub">Total across sessions: 4h 07m</div></div></div>
+            <div class="detail-item"><span class="detail-item__icon">📊</span><div><div class="detail-item__text">Community avg: 5h 30m</div><div class="detail-item__sub">You're 1h 23m ahead of avg</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="feature-row feature-row--flip">
+        <div class="feature-row__text">
+          <span class="section-label">The Hive</span>
+          <h2>A social feed that doesn't feel like social media</h2>
+          <p>Follow the friends you actually puzzle with. The Hive feed shows what they're solving and when they finish — no likes, no comments, no noise. Just the quiet satisfaction of knowing your friend just finished a 1000-piece at midnight.</p>
+        </div>
+        <div class="feature-row__visual">
+          <div class="feature-detail">
+            <div class="detail-item"><span class="detail-item__icon">🐝</span><div><div class="detail-item__text">Sarah finished <em>Autumn Forest</em></div><div class="detail-item__sub">3h 42m · 500 pc · 2h ago</div></div></div>
+            <div class="detail-item"><span class="detail-item__icon">🐝</span><div><div class="detail-item__text">Mike added <em>The Great Wave</em></div><div class="detail-item__sub">Ravensburger · 1000 pc · yesterday</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="container">
+      <div class="feature-row">
+        <div class="feature-row__text">
+          <span class="section-label">Goals &amp; Streaks</span>
+          <h2>Stay motivated all year long</h2>
+          <p>Set a yearly puzzle goal — 100, 365, 500, or 1000 pieces solved — and PuzzleBee tracks your progress. Keep your daily solving streak going to earn achievements that actually feel meaningful.</p>
+        </div>
+        <div class="feature-row__visual">
+          <div class="feature-detail">
+            <div class="detail-item"><span class="detail-item__icon">🔥</span><div><div class="detail-item__text">14 day streak</div><div class="detail-item__sub">One more piece today keeps it warm.</div></div></div>
+            <div class="detail-item"><span class="detail-item__icon">🎯</span><div><div class="detail-item__text">Goal: 365 puzzles this year</div><div class="detail-item__sub">47 solved · 318 to go</div></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section style="background:var(--ink);border-top:none;">
+    <div class="container" style="text-align:center;">
+      <span style="font-size:2.5rem;display:block;margin-bottom:20px;">🐝</span>
+      <h2 style="color:#FBF7EE;margin-bottom:16px;">Download PuzzleBee free</h2>
+      <p style="color:rgba(251,247,238,.65);max-width:380px;margin:0 auto 36px;">Available now on iPhone. No subscription required.</p>
+      <a href="https://apps.apple.com/app/puzzlebee" class="badge-appstore">
+        <span><span class="badge-appstore__sub">Download on the</span><span class="badge-appstore__main">App Store</span></span>
+      </a>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <a href="/" class="footer__wordmark">🐝 PuzzleBee</a>
+      <div class="footer__links">
+        <a href="/features.html">Features</a>
+        <a href="/about.html">About</a>
+        <a href="/press.html">Press</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="mailto:support@puzzlebee.app">Contact</a>
+      </div>
+      <p class="footer__copy">© 2026 PuzzleBee</p>
+    </div>
+  </footer>
+
+</body>
+</html>

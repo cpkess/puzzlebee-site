@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin — PuzzleBee</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<!-- ── Auth ── -->
+<div class="auth-wrap" id="auth" style="display:none;">
+  <div class="auth-card">
+    <span class="auth-logo">🐝</span>
+    <div class="auth-title">PuzzleBee Admin</div>
+    <div class="auth-sub">Sign in to manage the hive.</div>
+
+    <!-- Step 1: Email -->
+    <div id="auth-email-step">
+      <form id="auth-email-form">
+        <label class="auth-label" for="auth-email-input">Email address</label>
+        <input id="auth-email-input" class="auth-input" type="email" placeholder="you@example.com" autocomplete="email" required>
+        <button id="auth-email-btn" class="auth-btn" type="submit">Send code</button>
+      </form>
+    </div>
+
+    <!-- Step 2: OTP -->
+    <div id="auth-otp-step" style="display:none;">
+      <div class="auth-msg">
+        We sent a 6-digit code to <strong id="auth-otp-email-label"></strong>.
+      </div>
+      <form id="auth-otp-form">
+        <label class="auth-label" for="auth-otp-input">Verification code</label>
+        <input id="auth-otp-input" class="auth-input" type="text" placeholder="123456" inputmode="numeric" autocomplete="one-time-code" maxlength="6" required>
+        <button id="auth-otp-btn" class="auth-btn" type="submit">Verify</button>
+      </form>
+      <p style="margin-top:12px;text-align:center;">
+        <button id="auth-back-btn" style="background:none;border:none;color:var(--honey-deep);font-size:.8125rem;cursor:pointer;font-weight:600;">← Use a different email</button>
+      </p>
+    </div>
+
+    <div id="auth-error" class="auth-error" style="display:none;"></div>
+  </div>
+</div>
+
+<!-- ── App shell ── -->
+<div id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <a href="/" class="sidebar__logo">🐝 PuzzleBee</a>
+
+    <div class="sidebar__label">Admin</div>
+    <nav class="sidebar__nav">
+      <button class="nav-item active" data-tab="queue">
+        <span class="nav-item__icon">📥</span>
+        Queue
+        <span class="nav-item__badge" id="queue-badge" style="display:none;"></span>
+      </button>
+      <button class="nav-item" data-tab="puzzles">
+        <span class="nav-item__icon">🧩</span>
+        Puzzles
+      </button>
+      <button class="nav-item" data-tab="users">
+        <span class="nav-item__icon">👥</span>
+        Users
+      </button>
+      <button class="nav-item" data-tab="support">
+        <span class="nav-item__icon">🎫</span>
+        Support
+      </button>
+    </nav>
+
+    <div class="sidebar__signout">
+      <span id="sidebar-user" style="font-size:.75rem;color:var(--ink3);display:block;margin-bottom:8px;padding:0 4px;"></span>
+      <button class="nav-item" id="sign-out-btn" style="width:100%;">
+        <span class="nav-item__icon">↩</span>
+        Sign out
+      </button>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- Queue -->
+    <div id="tab-queue" class="tab-panel">
+      <div class="page-header">
+        <h1>Approval Queue</h1>
+        <p>Review and approve or reject puzzles submitted by users.</p>
+      </div>
+      <div id="queue-container"></div>
+    </div>
+
+    <!-- Puzzles -->
+    <div id="tab-puzzles" class="tab-panel" style="display:none;">
+      <div class="page-header">
+        <h1>Puzzles</h1>
+        <p>Search, edit, and feature puzzles in the database.</p>
+      </div>
+      <div class="toolbar">
+        <input id="puzzles-search" class="search-input" type="search" placeholder="Search by title or brand…">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Brand</th>
+              <th>Pieces</th>
+              <th>Difficulty</th>
+              <th>Status</th>
+              <th>Featured</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="puzzles-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Users -->
+    <div id="tab-users" class="tab-panel" style="display:none;">
+      <div class="page-header">
+        <h1>Users</h1>
+        <p>View accounts and manage admin access.</p>
+      </div>
+      <div class="toolbar">
+        <input id="users-search" class="search-input" type="search" placeholder="Search by username or name…">
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Username</th>
+              <th>Display name</th>
+              <th>Role</th>
+              <th>Joined</th>
+              <th>Admin</th>
+            </tr>
+          </thead>
+          <tbody id="users-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- Support -->
+    <div id="tab-support" class="tab-panel" style="display:none;">
+      <div class="page-header">
+        <h1>Support Tickets</h1>
+        <p>Bug reports and support requests from users.</p>
+      </div>
+      <div class="toolbar">
+        <select id="support-filter" class="filter-select">
+          <option value="open">Open</option>
+          <option value="in_progress">In progress</option>
+          <option value="resolved">Resolved</option>
+          <option value="all">All tickets</option>
+        </select>
+      </div>
+      <div id="support-list"></div>
+
+      <!-- Ticket detail -->
+      <div id="support-detail" style="display:none;margin-top:24px;">
+        <div style="background:white;border:1px solid var(--border);border-radius:14px;padding:24px 28px;">
+          <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+            <h2 id="ticket-subject" style="font-size:1.125rem;font-weight:700;color:var(--ink);"></h2>
+            <button id="ticket-close-btn" class="btn btn--ghost btn--sm">Close</button>
+          </div>
+          <div class="detail-meta">
+            <div class="detail-meta-row"><span class="detail-meta-row__label">From</span><span class="detail-meta-row__val" id="ticket-from"></span></div>
+            <div class="detail-meta-row"><span class="detail-meta-row__label">Type</span><span class="detail-meta-row__val" id="ticket-type"></span></div>
+            <div class="detail-meta-row"><span class="detail-meta-row__label">Submitted</span><span class="detail-meta-row__val" id="ticket-date"></span></div>
+          </div>
+          <div class="detail-body" id="ticket-body"></div>
+          <div class="form-field">
+            <label class="form-label">Admin note (internal only)</label>
+            <textarea id="ticket-note" class="form-textarea" placeholder="Internal notes visible only to admins…"></textarea>
+          </div>
+          <div class="form-field">
+            <label class="form-label">Status</label>
+            <select id="ticket-status" class="form-select">
+              <option value="open">Open</option>
+              <option value="in_progress">In progress</option>
+              <option value="resolved">Resolved</option>
+            </select>
+          </div>
+          <div style="display:flex;justify-content:flex-end;margin-top:16px;">
+            <button id="ticket-save-btn" class="btn btn--primary">Save changes</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<!-- Puzzle edit modal -->
+<div id="puzzle-modal" class="modal-backdrop">
+  <div class="modal">
+    <div class="modal__header">
+      <span class="modal__title">Edit puzzle</span>
+      <button id="puzzle-modal-close" class="modal__close">✕</button>
+    </div>
+    <form id="puzzle-edit-form">
+      <input type="hidden" id="edit-puzzle-id">
+      <div class="form-field">
+        <label class="form-label">Title</label>
+        <input id="edit-title" class="form-input" type="text" required>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Brand</label>
+          <input id="edit-brand" class="form-input" type="text">
+        </div>
+        <div class="form-field">
+          <label class="form-label">Piece count</label>
+          <input id="edit-piece-count" class="form-input" type="number" min="1">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-field">
+          <label class="form-label">Difficulty</label>
+          <select id="edit-difficulty" class="form-select">
+            <option value="easy">Easy</option>
+            <option value="medium">Medium</option>
+            <option value="hard">Hard</option>
+            <option value="expert">Expert</option>
+          </select>
+        </div>
+        <div class="form-field">
+          <label class="form-label">Status</label>
+          <select id="edit-status" class="form-select">
+            <option value="published">Published</option>
+            <option value="pending_review">Pending review</option>
+            <option value="private">Private</option>
+          </select>
+        </div>
+      </div>
+      <div class="modal__footer">
+        <button type="button" id="puzzle-modal-cancel" class="btn btn--ghost">Cancel</button>
+        <button type="submit" class="btn btn--primary">Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script src="admin.js"></script>
+
+</body>
+</html>
