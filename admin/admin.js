@@ -67,10 +67,11 @@ function showAuth() {
 }
 
 async function enterApp(user) {
-  const { data: profile } = await sb.from('profiles').select('is_admin, username').eq('id', user.id).single();
-  if (!profile || !profile.is_admin) {
+  const { data: profile, error: profileError } = await sb.from('profiles').select('is_admin, username').eq('id', user.id).single();
+  if (profileError || !profile || !profile.is_admin) {
     await sb.auth.signOut();
-    $('auth-error').textContent = 'Access denied. This account does not have admin privileges.';
+    const reason = profileError ? profileError.message : (!profile ? 'No profile found for user ' + user.id : 'is_admin = ' + profile.is_admin);
+    $('auth-error').textContent = 'Access denied: ' + reason;
     $('auth-error').style.display = 'block';
     return;
   }
