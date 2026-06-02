@@ -62,7 +62,7 @@ async function init() {
 }
 
 function showAuth() {
-  $('auth').style.display = 'flex';
+  $('auth').style.display = '';
   $('app').classList.remove('visible');
 }
 
