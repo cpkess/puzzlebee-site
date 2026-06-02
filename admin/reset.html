@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Reset Password — PuzzleBee Admin</title>
+  <link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="auth-wrap" id="reset-wrap">
+  <div class="auth-card">
+    <span class="auth-logo">🐝</span>
+    <div class="auth-title">Set new password</div>
+    <div class="auth-sub" id="reset-sub">Choose a password for your admin account.</div>
+
+    <form id="reset-form">
+      <label class="auth-label" for="new-password">New password</label>
+      <input id="new-password" class="auth-input" type="password" placeholder="••••••••" autocomplete="new-password" minlength="8" required>
+      <label class="auth-label" for="confirm-password">Confirm password</label>
+      <input id="confirm-password" class="auth-input" type="password" placeholder="••••••••" autocomplete="new-password" minlength="8" required>
+      <button id="reset-btn" class="auth-btn" type="submit">Set password</button>
+    </form>
+
+    <div id="reset-error" class="auth-error" style="display:none;"></div>
+    <div id="reset-success" class="auth-msg" style="display:none;">
+      Password updated. <a href="/admin/">Go to admin panel →</a>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
+<script>
+  const SUPABASE_URL     = 'https://slepfovcxclwpcuqmhql.supabase.co';
+  const SUPABASE_ANON_KEY = 'sb_publishable_Hhyy2Et18FafeDZjZrn4kg_KdFeN7AF';
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+
+  // Supabase puts the session tokens in the URL hash after a password reset link click
+  sb.auth.onAuthStateChange((event) => {
+    if (event === 'PASSWORD_RECOVERY') {
+      document.getElementById('reset-sub').textContent = 'You\'re verified. Choose a new password.';
+    }
+  });
+
+  document.getElementById('reset-form').addEventListener('submit', async e => {
+    e.preventDefault();
+    const pw1 = document.getElementById('new-password').value;
+    const pw2 = document.getElementById('confirm-password').value;
+    const errEl = document.getElementById('reset-error');
+    errEl.style.display = 'none';
+
+    if (pw1 !== pw2) {
+      errEl.textContent = 'Passwords do not match.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    const btn = document.getElementById('reset-btn');
+    btn.disabled = true;
+    btn.textContent = 'Saving…';
+
+    const { error } = await sb.auth.updateUser({ password: pw1 });
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.style.display = 'block';
+      btn.disabled = false;
+      btn.textContent = 'Set password';
+      return;
+    }
+
+    document.getElementById('reset-form').style.display = 'none';
+    document.getElementById('reset-success').style.display = 'block';
+  });
+</script>
+
+</body>
+</html>
