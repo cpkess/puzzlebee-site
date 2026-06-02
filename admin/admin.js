@@ -80,20 +80,21 @@ async function enterApp(user) {
   navigateTo('queue');
 }
 
-$('auth-form').addEventListener('submit', async e => {
-  e.preventDefault();
-  const email    = $('auth-email-input').value.trim();
-  const password = $('auth-password-input').value;
-  $('auth-submit-btn').disabled = true;
-  $('auth-submit-btn').textContent = 'Signing in…';
+$('apple-signin-btn').addEventListener('click', async () => {
+  $('apple-signin-btn').style.opacity = '0.6';
+  $('apple-signin-btn').disabled = true;
   $('auth-error').style.display = 'none';
 
-  const { error } = await sb.auth.signInWithPassword({ email, password });
+  const { error } = await sb.auth.signInWithOAuth({
+    provider: 'apple',
+    options: { redirectTo: 'https://puzzlebee.app/admin/' },
+  });
+
   if (error) {
     $('auth-error').textContent = error.message;
     $('auth-error').style.display = 'block';
-    $('auth-submit-btn').disabled = false;
-    $('auth-submit-btn').textContent = 'Sign in';
+    $('apple-signin-btn').style.opacity = '1';
+    $('apple-signin-btn').disabled = false;
   }
 });
 
