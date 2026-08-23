@@ -12,8 +12,9 @@ let queueBadge = 0;
 
 // Storage bucket that holds puzzle pictures. The real name is detected from the
 // URLs of pictures already on the puzzles; this is only used as a fallback when
-// no puzzle has a picture yet.
-const FALLBACK_IMAGE_BUCKET = 'puzzle-photos';
+// no puzzle has a picture yet. Must match the bucket created in
+// supabase/migrations/20260530000000_private_pending_puzzles.sql.
+const FALLBACK_IMAGE_BUCKET = 'puzzle-submissions';
 // Escape hatch: localStorage.setItem('puzzlebee.imageBucket', '<name>') in the
 // browser console pins the bucket without a redeploy.
 const BUCKET_OVERRIDE_KEY = 'puzzlebee.imageBucket';
@@ -463,8 +464,12 @@ function addPhotoUrl(url) {
 
 async function uploadPhotoFile(file, puzzleId) {
   const bucket = await resolvePuzzleImageBucket();
+  // The bucket's INSERT policy requires (storage.foldername(name))[1] = auth.uid(),
+  // so every upload has to live under the signed-in admin's own id.
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) throw new Error('Signed out — sign in again to upload pictures.');
   const ext = (file.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
-  const path = `${puzzleId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const path = `${user.id}/${puzzleId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error } = await sb.storage.from(bucket).upload(path, file, {
     cacheControl: '3600',
     upsert: false,
@@ -573,6 +578,7 @@ async function openPuzzleEdit(id) {
   $('edit-piece-count').value = p.piece_count || '';
   $('edit-difficulty').value = p.difficulty || 'medium';
   $('edit-status').value = p.status || 'published';
+  $('edit-description').value = p.description || '';
 
   photoDraft = puzzleImages(p).map(url => ({ url, bucket: bucketFromStorageUrl(url), path: null }));
   sessionUploads = [];
@@ -596,6 +602,7 @@ $('puzzle-edit-form').addEventListener('submit', async e => {
     piece_count: parseInt($('edit-piece-count').value) || null,
     difficulty:  $('edit-difficulty').value,
     status:      $('edit-status').value,
+    description: $('edit-description').value.trim() || null,
     image_urls:  imageUrls,
     image_url:   imageUrls[0] || null,
   };
