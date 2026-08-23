@@ -14,6 +14,9 @@ let queueBadge = 0;
 // URLs of pictures already on the puzzles; this is only used as a fallback when
 // no puzzle has a picture yet.
 const FALLBACK_IMAGE_BUCKET = 'puzzle-photos';
+// Escape hatch: localStorage.setItem('puzzlebee.imageBucket', '<name>') in the
+// browser console pins the bucket without a redeploy.
+const BUCKET_OVERRIDE_KEY = 'puzzlebee.imageBucket';
 const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
 
 // ── DOM helpers ────────────────────────────────────────────────────────────
@@ -311,14 +314,54 @@ function bucketFromStorageUrl(url) {
   return m ? m[1] : null;
 }
 
-function puzzleImageBucket() {
-  if (detectedBucket) return detectedBucket;
+function bucketFromExistingPictures() {
   for (const p of [...puzzlesData, ...queueData]) {
     for (const url of puzzleImages(p)) {
       const bucket = bucketFromStorageUrl(url);
-      if (bucket) { detectedBucket = bucket; return bucket; }
+      if (bucket) return bucket;
     }
   }
+  return null;
+}
+
+// Buckets the signed-in admin can see. Listing needs a policy on storage.buckets,
+// so an empty list means "could not look", not "none exist".
+let bucketListing = null;
+async function listStorageBuckets() {
+  if (bucketListing) return bucketListing;
+  try {
+    const { data, error } = await sb.storage.listBuckets();
+    bucketListing = (error || !Array.isArray(data)) ? [] : data.map(b => b.name);
+  } catch (_) {
+    bucketListing = [];
+  }
+  return bucketListing;
+}
+
+// Best guess at the bucket without asking the network — for error messages.
+function puzzleImageBucket() {
+  return detectedBucket
+    || localStorage.getItem(BUCKET_OVERRIDE_KEY)
+    || bucketFromExistingPictures()
+    || FALLBACK_IMAGE_BUCKET;
+}
+
+// Resolve for real, in order of confidence: an operator override, the bucket
+// existing pictures already live in, then whatever storage actually holds.
+async function resolvePuzzleImageBucket() {
+  if (detectedBucket) return detectedBucket;
+
+  const override = localStorage.getItem(BUCKET_OVERRIDE_KEY);
+  if (override) return (detectedBucket = override);
+
+  const fromPictures = bucketFromExistingPictures();
+  if (fromPictures) return (detectedBucket = fromPictures);
+
+  const names = await listStorageBuckets();
+  const named = names.find(n => /puzzle/i.test(n)) || names.find(n => /photo|image|picture/i.test(n));
+  if (named) return (detectedBucket = named);
+  if (names.length === 1) return (detectedBucket = names[0]);
+
   return FALLBACK_IMAGE_BUCKET;
 }
 
@@ -419,7 +462,7 @@ function addPhotoUrl(url) {
 }
 
 async function uploadPhotoFile(file, puzzleId) {
-  const bucket = puzzleImageBucket();
+  const bucket = await resolvePuzzleImageBucket();
   const ext = (file.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
   const path = `${puzzleId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
   const { error } = await sb.storage.from(bucket).upload(path, file, {
@@ -470,9 +513,16 @@ async function handlePhotoFiles(files) {
       const idx = photoDraft.indexOf(placeholder);
       if (idx !== -1) photoDraft.splice(idx, 1);
       const detail = err.message || err.error || String(err);
-      const msg = /bucket not found/i.test(detail)
-        ? `Storage bucket "${puzzleImageBucket()}" not found — check the bucket name in admin.js.`
-        : `Upload of ${file.name} failed (bucket "${puzzleImageBucket()}"): ${detail}`;
+      let msg = `Upload of ${file.name} failed (bucket "${puzzleImageBucket()}"): ${detail}`;
+      if (/bucket not found/i.test(detail)) {
+        const names = await listStorageBuckets();
+        msg = names.length
+          ? `Storage bucket "${puzzleImageBucket()}" does not exist. Buckets on this project: ${names.join(', ')}. `
+            + `Run localStorage.setItem('${BUCKET_OVERRIDE_KEY}', '<name>') in the console to use one of them.`
+          : `Storage bucket "${puzzleImageBucket()}" does not exist, and no buckets are visible to this account. `
+            + `Create one in Supabase → Storage, then set it with `
+            + `localStorage.setItem('${BUCKET_OVERRIDE_KEY}', '<name>') in the console.`;
+      }
       showPhotoError(msg);
     } finally {
       uploadsInFlight--;
