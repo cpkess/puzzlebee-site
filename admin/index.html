@@ -98,6 +98,7 @@
         <table>
           <thead>
             <tr>
+              <th class="th-thumb">Photo</th>
               <th>Title</th>
               <th>Brand</th>
               <th>Pieces</th>
@@ -230,6 +231,18 @@
           </select>
         </div>
       </div>
+      <div class="form-field">
+        <label class="form-label">Pictures</label>
+        <div id="edit-photos" class="photo-grid"></div>
+        <div class="photo-add">
+          <button type="button" id="photo-upload-btn" class="btn btn--ghost btn--sm">⬆ Upload photos</button>
+          <input id="photo-file-input" type="file" accept="image/*" multiple hidden>
+          <input id="photo-url-input" class="form-input photo-url-input" type="text" inputmode="url" placeholder="…or paste an image URL">
+          <button type="button" id="photo-url-btn" class="btn btn--ghost btn--sm">Add</button>
+        </div>
+        <p class="photo-hint">The first picture is the cover. Use ‹ › to reorder, ★ to make a picture the cover, ✕ to remove.</p>
+      </div>
+
       <div class="modal__footer">
         <button type="button" id="puzzle-modal-cancel" class="btn btn--ghost">Cancel</button>
         <button type="submit" class="btn btn--primary">Save changes</button>

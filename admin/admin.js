@@ -10,6 +10,12 @@ const sb = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 let currentTab = 'queue';
 let queueBadge = 0;
 
+// Storage bucket that holds puzzle pictures. The real name is detected from the
+// URLs of pictures already on the puzzles; this is only used as a fallback when
+// no puzzle has a picture yet.
+const FALLBACK_IMAGE_BUCKET = 'puzzle-photos';
+const MAX_IMAGE_BYTES = 10 * 1024 * 1024;
+
 // ── DOM helpers ────────────────────────────────────────────────────────────
 const $ = id => document.getElementById(id);
 const el = (tag, cls, html) => {
@@ -123,6 +129,8 @@ document.querySelectorAll('.nav-item').forEach(n => {
 });
 
 // ── Tab: Queue ─────────────────────────────────────────────────────────────
+let queueData = [];
+
 async function loadQueue() {
   const container = $('queue-container');
   container.innerHTML = '<div class="spinner"></div>';
@@ -135,6 +143,7 @@ async function loadQueue() {
 
   if (error) { container.innerHTML = `<p style="color:var(--red);padding:20px">${error.message}</p>`; return; }
 
+  queueData = data;
   queueBadge = data.length;
   $('queue-badge').textContent = data.length > 0 ? data.length : '';
   $('queue-badge').style.display = data.length > 0 ? 'inline' : 'none';
@@ -156,7 +165,7 @@ async function loadQueue() {
 function buildQueueCard(p) {
   const card = el('div', 'queue-card');
   const submitter = p.profiles?.username || 'Unknown';
-  const photos = p.image_urls || (p.image_url ? [p.image_url] : []);
+  const photos = puzzleImages(p);
 
   card.innerHTML = `
     <div class="queue-card__header">
@@ -170,6 +179,7 @@ function buildQueueCard(p) {
     <div class="queue-card__actions">
       <button class="btn btn--approve" onclick="approveQueuePuzzle('${p.id}', this)">✓ Approve</button>
       <button class="btn btn--danger"  onclick="rejectQueuePuzzle('${p.id}', this)">✕ Reject</button>
+      <button class="btn btn--ghost"   onclick="openPuzzleEdit('${p.id}')">🖼 Edit pictures</button>
     </div>
   `;
 
@@ -211,15 +221,15 @@ let puzzlesSearch = '';
 
 async function loadPuzzles() {
   const tbody = $('puzzles-tbody');
-  tbody.innerHTML = '<tr><td colspan="7"><div class="spinner"></div></td></tr>';
+  tbody.innerHTML = '<tr><td colspan="8"><div class="spinner"></div></td></tr>';
 
   const { data, error } = await sb
     .from('puzzles')
-    .select('id, title, brand, piece_count, difficulty, featured, status, created_at')
+    .select('*')
     .order('created_at', { ascending: false })
     .limit(500);
 
-  if (error) { tbody.innerHTML = `<tr><td colspan="7" style="color:var(--red);padding:16px">${error.message}</td></tr>`; return; }
+  if (error) { tbody.innerHTML = `<tr><td colspan="8" style="color:var(--red);padding:16px">${error.message}</td></tr>`; return; }
   puzzlesData = data;
   renderPuzzlesTable();
 }
@@ -233,13 +243,19 @@ function renderPuzzlesTable() {
 
   tbody.innerHTML = '';
   if (!filtered.length) {
-    tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;padding:32px;color:var(--ink3);">No puzzles found.</td></tr>';
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;padding:32px;color:var(--ink3);">No puzzles found.</td></tr>';
     return;
   }
 
   filtered.forEach(p => {
     const tr = el('tr');
+    const photos = puzzleImages(p);
+    const thumb = photos.length
+      ? `<img class="thumb" src="${esc(photos[0])}" alt="" loading="lazy">
+         ${photos.length > 1 ? `<div class="thumb__count">+${photos.length - 1}</div>` : ''}`
+      : '<div class="thumb thumb--empty">📦</div>';
     tr.innerHTML = `
+      <td>${thumb}</td>
       <td><strong>${esc(p.title || '—')}</strong></td>
       <td>${esc(p.brand || '—')}</td>
       <td>${p.piece_count || '—'}</td>
@@ -276,8 +292,215 @@ async function toggleFeatured(id, checkbox) {
   showToast(featured ? 'Marked as featured.' : 'Removed from featured.');
 }
 
+// ── Puzzle pictures ────────────────────────────────────────────────────────
+// Pictures live in `image_urls` (ordered, first one is the cover). Older rows
+// may only carry the single legacy `image_url`, so both are read and written.
+function puzzleImages(p) {
+  if (!p) return [];
+  const list = Array.isArray(p.image_urls) ? p.image_urls : (p.image_urls ? [p.image_urls] : []);
+  const all = list.length ? list : (p.image_url ? [p.image_url] : []);
+  return all.filter(u => typeof u === 'string' && u.trim()).map(u => u.trim());
+}
+
+let detectedBucket = null;
+
+// Storage URLs look like …/storage/v1/object/public/<bucket>/<path>, so the
+// bucket the app already uploads to can be read straight off an existing picture.
+function bucketFromStorageUrl(url) {
+  const m = /\/storage\/v1\/object\/(?:public\/|sign\/|authenticated\/)?([^/?#]+)\//.exec(String(url || ''));
+  return m ? m[1] : null;
+}
+
+function puzzleImageBucket() {
+  if (detectedBucket) return detectedBucket;
+  for (const p of [...puzzlesData, ...queueData]) {
+    for (const url of puzzleImages(p)) {
+      const bucket = bucketFromStorageUrl(url);
+      if (bucket) { detectedBucket = bucket; return bucket; }
+    }
+  }
+  return FALLBACK_IMAGE_BUCKET;
+}
+
+// Writes the update, retrying without any column PostgREST reports as unknown
+// (e.g. a schema that never had the legacy `image_url`).
+async function updatePuzzleRow(id, updates) {
+  let payload = { ...updates };
+  for (let attempt = 0; attempt < 3; attempt++) {
+    const { error } = await sb.from('puzzles').update(payload).eq('id', id);
+    if (!error) return { updates: payload, error: null };
+    const missing = error.code === 'PGRST204' && /'([^']+)' column/.exec(error.message || '');
+    if (!missing || !(missing[1] in payload)) return { updates: payload, error };
+    delete payload[missing[1]];
+    if (!Object.keys(payload).length) return { updates: payload, error };
+  }
+  return { updates: payload, error: null };
+}
+
+// Draft picture list for the open modal: { url, bucket, path, uploading }.
+let photoDraft = [];
+let sessionUploads = [];   // uploaded in this modal session, for cleanup on cancel
+let uploadsInFlight = 0;
+
+function renderPhotoEditor() {
+  const wrap = $('edit-photos');
+  wrap.innerHTML = '';
+
+  const existingEmpty = wrap.parentNode.querySelector('.photo-empty');
+  if (existingEmpty) existingEmpty.remove();
+  if (!photoDraft.length) {
+    wrap.insertAdjacentElement('beforebegin', el('div', 'photo-empty', 'No pictures yet — upload one or paste an image URL.'));
+  }
+
+  photoDraft.forEach((photo, i) => {
+    const tile = el('div', 'photo-tile' + (i === 0 ? ' photo-tile--cover' : '') + (photo.uploading ? ' photo-tile--uploading' : ''));
+
+    const img = el('img', 'photo-tile__img');
+    img.src = photo.url;
+    img.alt = '';
+    img.loading = 'lazy';
+    tile.appendChild(img);
+
+    if (photo.uploading) {
+      tile.appendChild(el('div', 'photo-tile__spinner'));
+    } else {
+      if (i === 0) tile.appendChild(el('span', 'photo-tile__badge', 'Cover'));
+
+      const remove = el('button', 'photo-tile__remove', '✕');
+      remove.type = 'button';
+      remove.title = 'Remove picture';
+      remove.addEventListener('click', () => removePhoto(i));
+      tile.appendChild(remove);
+
+      const bar = el('div', 'photo-tile__bar');
+      bar.appendChild(photoBarButton('‹', 'Move earlier', i === 0, () => movePhoto(i, -1)));
+      bar.appendChild(photoBarButton('★', 'Make cover', i === 0, () => movePhoto(i, -i)));
+      bar.appendChild(photoBarButton('›', 'Move later', i === photoDraft.length - 1, () => movePhoto(i, 1)));
+      tile.appendChild(bar);
+    }
+
+    wrap.appendChild(tile);
+  });
+
+  $('puzzle-modal').querySelector('button[type="submit"]').disabled = uploadsInFlight > 0;
+}
+
+function photoBarButton(label, title, disabled, onClick) {
+  const b = el('button', 'photo-tile__btn', label);
+  b.type = 'button';
+  b.title = title;
+  b.disabled = disabled;
+  if (!disabled) b.addEventListener('click', onClick);
+  return b;
+}
+
+function movePhoto(i, delta) {
+  const target = i + delta;
+  if (target < 0 || target >= photoDraft.length) return;
+  const [photo] = photoDraft.splice(i, 1);
+  photoDraft.splice(target, 0, photo);
+  renderPhotoEditor();
+}
+
+function removePhoto(i) {
+  photoDraft.splice(i, 1);
+  renderPhotoEditor();
+}
+
+function addPhotoUrl(url) {
+  const trimmed = (url || '').trim();
+  if (!trimmed) return false;
+  if (!/^https?:\/\//i.test(trimmed)) { showToast('Enter a full image URL starting with http.', 'error'); return false; }
+  if (photoDraft.some(ph => ph.url === trimmed)) { showToast('That picture is already attached.', 'error'); return false; }
+  photoDraft.push({ url: trimmed });
+  renderPhotoEditor();
+  return true;
+}
+
+async function uploadPhotoFile(file, puzzleId) {
+  const bucket = puzzleImageBucket();
+  const ext = (file.name.split('.').pop() || '').toLowerCase().replace(/[^a-z0-9]/g, '') || 'jpg';
+  const path = `${puzzleId}/${Date.now()}-${Math.random().toString(36).slice(2, 8)}.${ext}`;
+  const { error } = await sb.storage.from(bucket).upload(path, file, {
+    cacheControl: '3600',
+    upsert: false,
+    contentType: file.type || undefined,
+  });
+  if (error) throw error;
+  const { data } = sb.storage.from(bucket).getPublicUrl(path);
+  return { url: data.publicUrl, bucket, path };
+}
+
+async function handlePhotoFiles(files) {
+  const puzzleId = $('edit-puzzle-id').value;
+  if (!puzzleId) return;
+
+  for (const file of files) {
+    if (!file.type.startsWith('image/')) { showToast(`${file.name} is not an image.`, 'error'); continue; }
+    if (file.size > MAX_IMAGE_BYTES) { showToast(`${file.name} is larger than 10 MB.`, 'error'); continue; }
+
+    const placeholder = { url: URL.createObjectURL(file), uploading: true };
+    photoDraft.push(placeholder);
+    uploadsInFlight++;
+    renderPhotoEditor();
+
+    try {
+      const uploaded = await uploadPhotoFile(file, puzzleId);
+      URL.revokeObjectURL(placeholder.url);
+      Object.assign(placeholder, uploaded, { uploading: false });
+      sessionUploads.push({ bucket: uploaded.bucket, path: uploaded.path });
+    } catch (err) {
+      URL.revokeObjectURL(placeholder.url);
+      const idx = photoDraft.indexOf(placeholder);
+      if (idx !== -1) photoDraft.splice(idx, 1);
+      const msg = /bucket not found/i.test(err.message || '')
+        ? `Storage bucket "${puzzleImageBucket()}" not found — check the bucket name in admin.js.`
+        : `Upload failed: ${err.message || err}`;
+      showToast(msg, 'error');
+    } finally {
+      uploadsInFlight--;
+      renderPhotoEditor();
+    }
+  }
+}
+
+// Removes files uploaded in this modal session that ended up unused.
+async function discardUnusedUploads(keepUrls) {
+  const kept = new Set(keepUrls || []);
+  const orphans = sessionUploads.filter(u => !photoDraft.some(ph => ph.path === u.path && kept.has(ph.url)));
+  sessionUploads = [];
+  const byBucket = {};
+  orphans.forEach(o => { (byBucket[o.bucket] = byBucket[o.bucket] || []).push(o.path); });
+  for (const [bucket, paths] of Object.entries(byBucket)) {
+    await sb.storage.from(bucket).remove(paths);
+  }
+}
+
+$('photo-upload-btn').addEventListener('click', () => $('photo-file-input').click());
+
+$('photo-file-input').addEventListener('change', async e => {
+  const files = Array.from(e.target.files || []);
+  e.target.value = '';
+  await handlePhotoFiles(files);
+});
+
+$('photo-url-btn').addEventListener('click', () => {
+  if (addPhotoUrl($('photo-url-input').value)) $('photo-url-input').value = '';
+});
+
+$('photo-url-input').addEventListener('keydown', e => {
+  if (e.key !== 'Enter') return;
+  e.preventDefault();
+  if (addPhotoUrl(e.target.value)) e.target.value = '';
+});
+
+// ── Puzzle edit modal ──────────────────────────────────────────────────────
+function findPuzzle(id) {
+  return puzzlesData.find(x => x.id === id) || queueData.find(x => x.id === id) || null;
+}
+
 async function openPuzzleEdit(id) {
-  const p = puzzlesData.find(x => x.id === id);
+  const p = findPuzzle(id);
   if (!p) return;
   $('edit-puzzle-id').value = p.id;
   $('edit-title').value = p.title || '';
@@ -285,29 +508,56 @@ async function openPuzzleEdit(id) {
   $('edit-piece-count').value = p.piece_count || '';
   $('edit-difficulty').value = p.difficulty || 'medium';
   $('edit-status').value = p.status || 'published';
+
+  photoDraft = puzzleImages(p).map(url => ({ url, bucket: bucketFromStorageUrl(url), path: null }));
+  sessionUploads = [];
+  uploadsInFlight = 0;
+  $('photo-url-input').value = '';
+  renderPhotoEditor();
+
   $('puzzle-modal').classList.add('open');
 }
 
 $('puzzle-edit-form').addEventListener('submit', async e => {
   e.preventDefault();
+  if (uploadsInFlight > 0) { showToast('Wait for uploads to finish.', 'error'); return; }
+
   const id = $('edit-puzzle-id').value;
+  const imageUrls = photoDraft.filter(ph => !ph.uploading).map(ph => ph.url);
   const updates = {
     title:       $('edit-title').value.trim(),
     brand:       $('edit-brand').value.trim(),
     piece_count: parseInt($('edit-piece-count').value) || null,
     difficulty:  $('edit-difficulty').value,
     status:      $('edit-status').value,
+    image_urls:  imageUrls,
+    image_url:   imageUrls[0] || null,
   };
-  const { error } = await sb.from('puzzles').update(updates).eq('id', id);
+
+  const { updates: applied, error } = await updatePuzzleRow(id, updates);
   if (error) { showToast(error.message, 'error'); return; }
-  const p = puzzlesData.find(x => x.id === id);
-  if (p) Object.assign(p, updates);
+
+  await discardUnusedUploads(imageUrls);
+
+  [puzzlesData, queueData].forEach(list => {
+    const p = list.find(x => x.id === id);
+    if (p) Object.assign(p, applied);
+  });
+
   closePuzzleModal();
   renderPuzzlesTable();
+  if (currentTab === 'queue') loadQueue();
   showToast('Puzzle saved.');
 });
 
-function closePuzzleModal() { $('puzzle-modal').classList.remove('open'); }
+async function closePuzzleModal() {
+  $('puzzle-modal').classList.remove('open');
+  photoDraft.filter(ph => ph.uploading).forEach(ph => URL.revokeObjectURL(ph.url));
+  photoDraft = [];
+  uploadsInFlight = 0;
+  await discardUnusedUploads([]);
+}
+
 $('puzzle-modal-close').addEventListener('click', closePuzzleModal);
 $('puzzle-modal-cancel').addEventListener('click', closePuzzleModal);
 $('puzzle-modal').addEventListener('click', e => { if (e.target === $('puzzle-modal')) closePuzzleModal(); });
