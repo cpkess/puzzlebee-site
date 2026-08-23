@@ -410,8 +410,9 @@ function removePhoto(i) {
 function addPhotoUrl(url) {
   const trimmed = (url || '').trim();
   if (!trimmed) return false;
-  if (!/^https?:\/\//i.test(trimmed)) { showToast('Enter a full image URL starting with http.', 'error'); return false; }
-  if (photoDraft.some(ph => ph.url === trimmed)) { showToast('That picture is already attached.', 'error'); return false; }
+  if (!/^https?:\/\//i.test(trimmed)) { showPhotoError('Enter a full image URL starting with http.'); return false; }
+  if (photoDraft.some(ph => ph.url === trimmed)) { showPhotoError('That picture is already attached.'); return false; }
+  clearPhotoError();
   photoDraft.push({ url: trimmed });
   renderPhotoEditor();
   return true;
@@ -431,13 +432,28 @@ async function uploadPhotoFile(file, puzzleId) {
   return { url: data.publicUrl, bucket, path };
 }
 
+// Upload problems also land in the modal itself: a toast fades after three
+// seconds and is easy to miss while looking at the picture grid.
+function showPhotoError(msg) {
+  const box = $('photo-error');
+  box.textContent = msg;
+  box.style.display = msg ? 'block' : 'none';
+  if (msg) showToast(msg, 'error');
+}
+
+function clearPhotoError() { showPhotoError(''); }
+
 async function handlePhotoFiles(files) {
+  if (!files.length) return;
+
   const puzzleId = $('edit-puzzle-id').value;
-  if (!puzzleId) return;
+  if (!puzzleId) { showPhotoError('No puzzle is open — reopen the editor and try again.'); return; }
+
+  clearPhotoError();
 
   for (const file of files) {
-    if (!file.type.startsWith('image/')) { showToast(`${file.name} is not an image.`, 'error'); continue; }
-    if (file.size > MAX_IMAGE_BYTES) { showToast(`${file.name} is larger than 10 MB.`, 'error'); continue; }
+    if (!file.type.startsWith('image/')) { showPhotoError(`${file.name} is not an image.`); continue; }
+    if (file.size > MAX_IMAGE_BYTES) { showPhotoError(`${file.name} is larger than 10 MB.`); continue; }
 
     const placeholder = { url: URL.createObjectURL(file), uploading: true };
     photoDraft.push(placeholder);
@@ -453,10 +469,11 @@ async function handlePhotoFiles(files) {
       URL.revokeObjectURL(placeholder.url);
       const idx = photoDraft.indexOf(placeholder);
       if (idx !== -1) photoDraft.splice(idx, 1);
-      const msg = /bucket not found/i.test(err.message || '')
+      const detail = err.message || err.error || String(err);
+      const msg = /bucket not found/i.test(detail)
         ? `Storage bucket "${puzzleImageBucket()}" not found — check the bucket name in admin.js.`
-        : `Upload failed: ${err.message || err}`;
-      showToast(msg, 'error');
+        : `Upload of ${file.name} failed (bucket "${puzzleImageBucket()}"): ${detail}`;
+      showPhotoError(msg);
     } finally {
       uploadsInFlight--;
       renderPhotoEditor();
@@ -475,8 +492,6 @@ async function discardUnusedUploads(keepUrls) {
     await sb.storage.from(bucket).remove(paths);
   }
 }
-
-$('photo-upload-btn').addEventListener('click', () => $('photo-file-input').click());
 
 $('photo-file-input').addEventListener('change', async e => {
   const files = Array.from(e.target.files || []);
@@ -513,6 +528,7 @@ async function openPuzzleEdit(id) {
   sessionUploads = [];
   uploadsInFlight = 0;
   $('photo-url-input').value = '';
+  clearPhotoError();
   renderPhotoEditor();
 
   $('puzzle-modal').classList.add('open');

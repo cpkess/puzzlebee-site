@@ -333,6 +333,20 @@ tbody td strong { color: var(--ink); font-weight: 600; }
   animation: spin 0.7s linear infinite;
 }
 
+/* Kept in the layout (not display:none) so the label reliably opens the
+   picker in every browser, including Safari/iOS. */
+.visually-hidden {
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip: rect(0 0 0 0); white-space: nowrap; border: 0;
+}
+.photo-error {
+  background: var(--red-soft); border: 1px solid rgba(184,50,50,.2);
+  border-radius: 8px; padding: 9px 12px; margin-bottom: 10px;
+  font-size: 0.75rem; color: var(--red); word-break: break-word;
+}
+.photo-status { font-size: 0.75rem; color: var(--ink3); margin-bottom: 10px; }
+
 .photo-add { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .photo-url-input { flex: 1; min-width: 160px; width: auto; }
 .photo-hint { font-size: 0.75rem; color: var(--ink4); margin-top: 8px; }
