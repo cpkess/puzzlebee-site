@@ -123,6 +123,7 @@ function navigateTo(tab) {
   switch (tab) {
     case 'queue':   loadQueue();   break;
     case 'puzzles': loadPuzzles(); break;
+    case 'barcodes': loadBarcodes(); break;
     case 'users':   loadUsers();   break;
     case 'support': loadSupport(); break;
   }
@@ -634,6 +635,176 @@ async function closePuzzleModal() {
 $('puzzle-modal-close').addEventListener('click', closePuzzleModal);
 $('puzzle-modal-cancel').addEventListener('click', closePuzzleModal);
 $('puzzle-modal').addEventListener('click', e => { if (e.target === $('puzzle-modal')) closePuzzleModal(); });
+
+// ── Tab: Barcodes ──────────────────────────────────────────────────────────
+// Claims are votes, not writes: claim_puzzle_barcode() only attaches a barcode
+// to the catalog once two different people agree. That threshold is unreachable
+// for a niche publisher whose boxes only one person ever scans, so those claims
+// sit here until an admin decides. Approving goes through
+// admin_promote_barcode_claim() rather than a direct UPDATE, so the conflict
+// checks still run and the GS1 prefix is still learned.
+let barcodeGroups = [];
+
+function fmtBarcode(upc) {
+  if (!upc) return '—';
+  if (upc.length === 13) return `${upc[0]} ${upc.slice(1, 7)} ${upc.slice(7, 13)}`;
+  if (upc.length === 12) return `${upc.slice(0, 6)} ${upc.slice(6)}`;
+  return upc;
+}
+
+async function loadBarcodes() {
+  const container = $('barcodes-container');
+  container.innerHTML = '<div class="spinner"></div>';
+
+  const { data, error } = await sb
+    .from('puzzle_barcode_links')
+    .select(`
+      id, upc, created_at,
+      puzzle:puzzles!puzzle_barcode_links_puzzle_id_fkey (
+        id, title, brand, piece_count, upc, sku, image_url, image_urls
+      ),
+      claimant:profiles!puzzle_barcode_links_user_id_fkey ( username, display_name )
+    `)
+    .order('created_at', { ascending: true });
+
+  if (error) { container.innerHTML = `<p style="color:var(--red);padding:20px">${esc(error.message)}</p>`; return; }
+
+  // One card per (puzzle, barcode) pair; a claim already on the catalog is done.
+  const groups = new Map();
+  for (const link of data) {
+    if (!link.puzzle || link.puzzle.upc) continue;
+    const key = `${link.puzzle.id}|${link.upc}`;
+    if (!groups.has(key)) groups.set(key, { puzzle: link.puzzle, upc: link.upc, links: [] });
+    groups.get(key).links.push(link);
+  }
+  barcodeGroups = [...groups.values()];
+
+  const singles = barcodeGroups.filter(g => g.links.length === 1);
+  $('barcodes-badge').textContent = singles.length > 0 ? singles.length : '';
+  $('barcodes-badge').style.display = singles.length > 0 ? 'inline' : 'none';
+
+  renderBarcodes();
+}
+
+function renderBarcodes() {
+  const container = $('barcodes-container');
+  const filter = $('barcodes-filter').value;
+  const rows = filter === 'single'
+    ? barcodeGroups.filter(g => g.links.length === 1)
+    : barcodeGroups;
+
+  container.innerHTML = '';
+  if (!rows.length) {
+    const es = el('div', 'empty-state');
+    es.innerHTML = filter === 'single'
+      ? '<div class="empty-state__icon">✅</div><div class="empty-state__title">Nothing to review</div><div class="empty-state__body">No barcode has been scanned exactly once. Claims with two scans promote themselves.</div>'
+      : '<div class="empty-state__icon">🏷</div><div class="empty-state__title">No open claims</div><div class="empty-state__body">Every claimed barcode is already on its puzzle.</div>';
+    container.appendChild(es);
+    return;
+  }
+
+  const grid = el('div', 'queue-grid');
+  rows.forEach(g => grid.appendChild(buildBarcodeCard(g)));
+  container.appendChild(grid);
+}
+
+function buildBarcodeCard(group) {
+  const { puzzle, upc, links } = group;
+  const card = el('div', 'queue-card');
+  const who = links
+    .map(l => l.claimant?.username || l.claimant?.display_name || 'someone')
+    .filter((v, i, a) => a.indexOf(v) === i);
+  const scans = links.length === 1
+    ? `Scanned once, by ${esc(who[0])}`
+    : `${links.length} scans, by ${esc(who.join(', '))}`;
+
+  card.innerHTML = `
+    <div class="queue-card__header">
+      <div>
+        <div class="queue-card__title">${esc(puzzle.title || 'Untitled')}</div>
+        <div class="queue-card__meta">${esc(puzzle.brand || '—')} · ${puzzle.piece_count ? puzzle.piece_count.toLocaleString() + ' pc' : 'pieces unknown'}${puzzle.sku ? ' · sku ' + esc(puzzle.sku) : ''}</div>
+      </div>
+      <span class="queue-card__submitter">${scans}</span>
+    </div>
+    <div class="barcode-claim">
+      <span class="barcode-claim__code">${esc(fmtBarcode(upc))}</span>
+      <span class="barcode-claim__when">first scanned ${esc(fmtDate(links[0].created_at))}</span>
+    </div>
+    <div class="queue-card__photos"></div>
+    <div class="queue-card__actions"></div>
+  `;
+
+  const photosRow = card.querySelector('.queue-card__photos');
+  const photos = puzzleImages(puzzle);
+  if (photos.length) {
+    photos.slice(0, 4).forEach(url => {
+      const img = el('img', 'queue-card__photo');
+      img.src = url; img.alt = '';
+      photosRow.appendChild(img);
+    });
+  } else {
+    photosRow.appendChild(el('div', 'queue-card__photo-placeholder', '📦'));
+  }
+
+  const actions = card.querySelector('.queue-card__actions');
+  const approve = el('button', 'btn btn--approve', '✓ Attach barcode');
+  approve.addEventListener('click', () => approveBarcodeClaim(group, approve));
+  const reject = el('button', 'btn btn--danger', '✕ Dismiss');
+  reject.addEventListener('click', () => rejectBarcodeClaim(group, reject));
+  const edit = el('button', 'btn btn--ghost', '🧩 Open puzzle');
+  edit.addEventListener('click', () => openPuzzleEdit(puzzle.id));
+  actions.append(approve, reject, edit);
+
+  return card;
+}
+
+async function approveBarcodeClaim(group, btn) {
+  const { puzzle, upc } = group;
+  if (!confirm(`Attach barcode ${fmtBarcode(upc)} to "${puzzle.title}"?\n\nThis publishes it to every user, and the barcode cannot be attached to a different puzzle afterwards.`)) return;
+  btn.disabled = true; btn.textContent = 'Attaching…';
+
+  const { data, error } = await sb.rpc('admin_promote_barcode_claim', {
+    p_puzzle_id: puzzle.id,
+    p_upc: upc,
+  });
+  if (error) {
+    showToast(error.message, 'error');
+    btn.disabled = false; btn.textContent = '✓ Attach barcode';
+    return;
+  }
+  if (data?.status === 'conflict') {
+    showToast('That barcode already belongs to a different puzzle.', 'error');
+    btn.disabled = false; btn.textContent = '✓ Attach barcode';
+    return;
+  }
+  if (data?.status === 'taken') {
+    showToast('This puzzle already has a different barcode.', 'error');
+    btn.disabled = false; btn.textContent = '✓ Attach barcode';
+    return;
+  }
+  showToast('Barcode attached and published.');
+  loadBarcodes();
+}
+
+async function rejectBarcodeClaim(group, btn) {
+  const { puzzle, upc, links } = group;
+  if (!confirm(`Dismiss the claim that ${fmtBarcode(upc)} is "${puzzle.title}"?\n\nThe claim is deleted. Nothing on the puzzle changes, and the barcode stays free.`)) return;
+  btn.disabled = true; btn.textContent = 'Dismissing…';
+
+  const { error } = await sb
+    .from('puzzle_barcode_links')
+    .delete()
+    .in('id', links.map(l => l.id));
+  if (error) {
+    showToast(error.message, 'error');
+    btn.disabled = false; btn.textContent = '✕ Dismiss';
+    return;
+  }
+  showToast('Claim dismissed.');
+  loadBarcodes();
+}
+
+$('barcodes-filter').addEventListener('change', () => renderBarcodes());
 
 // ── Tab: Users ─────────────────────────────────────────────────────────────
 let usersData = [];

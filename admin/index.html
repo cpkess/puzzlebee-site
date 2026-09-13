@@ -54,6 +54,11 @@
         <span class="nav-item__icon">🧩</span>
         Puzzles
       </button>
+      <button class="nav-item" data-tab="barcodes">
+        <span class="nav-item__icon">🏷</span>
+        Barcodes
+        <span class="nav-item__badge" id="barcodes-badge" style="display:none;"></span>
+      </button>
       <button class="nav-item" data-tab="users">
         <span class="nav-item__icon">👥</span>
         Users
@@ -111,6 +116,23 @@
           <tbody id="puzzles-tbody"></tbody>
         </table>
       </div>
+    </div>
+
+    <!-- Barcodes -->
+    <div id="tab-barcodes" class="tab-panel" style="display:none;">
+      <div class="page-header">
+        <h1>Barcode Claims</h1>
+        <p>Most of the catalog has no barcode. When someone scans a box and picks the
+           matching puzzle, it is recorded here. Two people agreeing promotes it
+           automatically — these are the ones that need a human.</p>
+      </div>
+      <div class="toolbar">
+        <select id="barcodes-filter" class="filter-select">
+          <option value="single">Scanned once — needs review</option>
+          <option value="all">All unpromoted claims</option>
+        </select>
+      </div>
+      <div id="barcodes-container"></div>
     </div>
 
     <!-- Users -->

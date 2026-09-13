@@ -225,6 +225,19 @@ tbody td strong { color: var(--ink); font-weight: 600; }
 .queue-card__actions { display: flex; gap: 8px; }
 .queue-card__submitter { font-size: 0.75rem; color: var(--ink4); margin-left: auto; align-self: center; }
 
+/* ── Barcode claim ── */
+.barcode-claim {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  margin: 10px 0 12px;
+  padding: 8px 12px;
+  background: var(--cream); border: 1px solid var(--border); border-radius: 10px;
+}
+.barcode-claim__code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.95rem; letter-spacing: 0.08em; color: var(--ink);
+}
+.barcode-claim__when { font-size: 0.75rem; color: var(--ink4); }
+
 /* ── Empty state ── */
 .empty-state {
   display: flex; flex-direction: column; align-items: center; justify-content: center;
