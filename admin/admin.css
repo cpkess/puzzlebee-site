@@ -338,6 +338,11 @@ tbody td strong { color: var(--ink); font-weight: 600; }
 }
 .photo-tile__btn:hover:not(:disabled) { background: var(--cream100); color: var(--ink); }
 .photo-tile__btn:disabled { opacity: 0.3; cursor: default; }
+.photo-tile__kind {
+  display: block; width: 100%; border: none; border-top: 1px solid var(--border);
+  padding: 4px 6px; background: white; color: var(--ink2);
+  font: inherit; font-size: 0.6875rem; font-weight: 600; cursor: pointer;
+}
 .photo-tile--uploading .photo-tile__img { opacity: 0.4; }
 .photo-tile__spinner {
   position: absolute; top: 50%; left: 50%; margin: -10px 0 0 -10px;
