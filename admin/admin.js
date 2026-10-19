@@ -382,7 +382,60 @@ async function updatePuzzleRow(id, updates) {
   return { updates: payload, error: null };
 }
 
-// Draft picture list for the open modal: { url, bucket, path, uploading }.
+// What each picture shows, stored in `puzzle_images`. The database orders a
+// puzzle's pictures by kind (puzzle art first, box shots and 3D renders last,
+// your arrangement within each group) and picks the cover from that order, so
+// the editor sorts the same way and shows the cover the app will actually use.
+const PHOTO_KINDS = [
+  ['unknown',   'Type not set'],
+  ['artwork',   'Puzzle art'],
+  ['box',       'Box'],
+  ['render',    '3D render'],
+  ['lifestyle', 'In use'],
+  ['detail',    'Close-up'],
+];
+function photoKindRank(kind) {
+  if (kind === 'artwork') return 0;
+  if (kind === 'box' || kind === 'render') return 2;
+  return 1;
+}
+// False until the puzzle_images migration is applied; the type picker hides.
+let photoKindsAvailable = false;
+
+function sortPhotoDraft() {
+  photoDraft = photoDraft
+    .map((ph, i) => [ph, i])
+    .sort((a, b) => photoKindRank(a[0].kind) - photoKindRank(b[0].kind) || a[1] - b[1])
+    .map(([ph]) => ph);
+}
+
+async function loadPhotoKinds(puzzleId) {
+  const { data, error } = await sb.from('puzzle_images').select('url, kind').eq('puzzle_id', puzzleId);
+  if (error) { photoKindsAvailable = false; return new Map(); }
+  photoKindsAvailable = true;
+  return new Map((data || []).map(r => [r.url, r.kind]));
+}
+
+// Written after the puzzle row, whose trigger has by then created a
+// puzzle_images row for every URL; one update per kind keeps it to a few calls.
+async function savePhotoKinds(puzzleId, photos) {
+  if (!photoKindsAvailable) return null;
+  const byKind = new Map();
+  photos.forEach(ph => {
+    const kind = ph.kind || 'unknown';
+    if (!byKind.has(kind)) byKind.set(kind, []);
+    byKind.get(kind).push(ph.url);
+  });
+  for (const [kind, urls] of byKind) {
+    const { error } = await sb.from('puzzle_images')
+      .update({ kind, kind_source: kind === 'unknown' ? null : 'admin' })
+      .eq('puzzle_id', puzzleId).in('url', urls);
+    if (error) return error;
+  }
+  return null;
+}
+
+// Draft picture list for the open modal: { url, kind, bucket, path, uploading }.
 let photoDraft = [];
 let sessionUploads = [];   // uploaded in this modal session, for cleanup on cancel
 let uploadsInFlight = 0;
@@ -396,6 +449,9 @@ function renderPhotoEditor() {
   if (!photoDraft.length) {
     wrap.insertAdjacentElement('beforebegin', el('div', 'photo-empty', 'No pictures yet — upload one or paste an image URL.'));
   }
+
+  sortPhotoDraft();
+  const rankOf = i => photoKindRank(photoDraft[i] && photoDraft[i].kind);
 
   photoDraft.forEach((photo, i) => {
     const tile = el('div', 'photo-tile' + (i === 0 ? ' photo-tile--cover' : '') + (photo.uploading ? ' photo-tile--uploading' : ''));
@@ -417,11 +473,30 @@ function renderPhotoEditor() {
       remove.addEventListener('click', () => removePhoto(i));
       tile.appendChild(remove);
 
+      // Moves stay inside the picture's kind group, since the order between
+      // groups is fixed: a box shot cannot be put ahead of the puzzle art.
+      const rank = rankOf(i);
+      const groupStart = photoDraft.findIndex((_, j) => rankOf(j) === rank);
+      const coverBlocked = rankOf(0) !== rank;
       const bar = el('div', 'photo-tile__bar');
-      bar.appendChild(photoBarButton('‹', 'Move earlier', i === 0, () => movePhoto(i, -1)));
-      bar.appendChild(photoBarButton('★', 'Make cover', i === 0, () => movePhoto(i, -i)));
-      bar.appendChild(photoBarButton('›', 'Move later', i === photoDraft.length - 1, () => movePhoto(i, 1)));
+      bar.appendChild(photoBarButton('‹', 'Move earlier', i === groupStart, () => movePhoto(i, -1)));
+      bar.appendChild(photoBarButton('★', coverBlocked ? 'Puzzle art comes first; change this picture\'s type to make it the cover' : 'Make cover',
+        i === 0 || coverBlocked, () => movePhoto(i, -i)));
+      bar.appendChild(photoBarButton('›', 'Move later', i === photoDraft.length - 1 || rankOf(i + 1) !== rank, () => movePhoto(i, 1)));
       tile.appendChild(bar);
+
+      if (photoKindsAvailable) {
+        const select = el('select', 'photo-tile__kind');
+        select.title = 'What this picture shows';
+        PHOTO_KINDS.forEach(([value, label]) => {
+          const opt = el('option', null, label);
+          opt.value = value;
+          if ((photo.kind || 'unknown') === value) opt.selected = true;
+          select.appendChild(opt);
+        });
+        select.addEventListener('change', () => { photo.kind = select.value; renderPhotoEditor(); });
+        tile.appendChild(select);
+      }
     }
 
     wrap.appendChild(tile);
@@ -581,7 +656,8 @@ async function openPuzzleEdit(id) {
   $('edit-status').value = p.status || 'published';
   $('edit-description').value = p.description || '';
 
-  photoDraft = puzzleImages(p).map(url => ({ url, bucket: bucketFromStorageUrl(url), path: null }));
+  const kinds = await loadPhotoKinds(p.id);
+  photoDraft = puzzleImages(p).map(url => ({ url, kind: kinds.get(url) || 'unknown', bucket: bucketFromStorageUrl(url), path: null }));
   sessionUploads = [];
   uploadsInFlight = 0;
   $('photo-url-input').value = '';
@@ -596,7 +672,9 @@ $('puzzle-edit-form').addEventListener('submit', async e => {
   if (uploadsInFlight > 0) { showToast('Wait for uploads to finish.', 'error'); return; }
 
   const id = $('edit-puzzle-id').value;
-  const imageUrls = photoDraft.filter(ph => !ph.uploading).map(ph => ph.url);
+  sortPhotoDraft();
+  const photos = photoDraft.filter(ph => !ph.uploading);
+  const imageUrls = photos.map(ph => ph.url);
   const updates = {
     title:       $('edit-title').value.trim(),
     brand:       $('edit-brand').value.trim(),
@@ -610,6 +688,9 @@ $('puzzle-edit-form').addEventListener('submit', async e => {
 
   const { updates: applied, error } = await updatePuzzleRow(id, updates);
   if (error) { showToast(error.message, 'error'); return; }
+
+  const kindError = await savePhotoKinds(id, photos);
+  if (kindError) { showToast(`Saved, but picture types were not: ${kindError.message}`, 'error'); }
 
   await discardUnusedUploads(imageUrls);
 
