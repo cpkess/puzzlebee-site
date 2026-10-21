@@ -46,7 +46,7 @@
       <div class="nav__links">
         <a href="/features.html" class="nav__link--hide">Features</a>
         <a href="/about.html" class="nav__link--hide">About</a>
-        <a href="https://apps.apple.com/app/puzzlebee" class="nav__cta">Download</a>
+        <a href="https://apps.apple.com/app/id6776897922" class="nav__cta">Download</a>
       </div>
     </div>
   </nav>
@@ -61,7 +61,7 @@
         <p id="invite-body">Track the puzzles you own, time your solves, and see what your friends finish.</p>
         <div class="actions">
           <a class="btn btn--honey" id="invite-open" href="#">Add as a friend in PuzzleBee</a>
-          <a class="btn btn--ghost" href="https://apps.apple.com/app/puzzlebee">Get PuzzleBee</a>
+          <a class="btn btn--ghost" href="https://apps.apple.com/app/id6776897922">Get PuzzleBee</a>
         </div>
         <p class="hint">Already have the app? The first button opens it.</p>
       </div>
@@ -73,7 +73,7 @@
         <p class="meta" id="puzzle-meta"></p>
         <div class="actions">
           <a class="btn btn--honey" id="puzzle-open" href="#">Open in PuzzleBee</a>
-          <a class="btn btn--ghost" href="https://apps.apple.com/app/puzzlebee">Get PuzzleBee</a>
+          <a class="btn btn--ghost" href="https://apps.apple.com/app/id6776897922">Get PuzzleBee</a>
         </div>
         <p class="hint">Already have the app? The first button opens it.</p>
       </div>
@@ -136,15 +136,19 @@
     }
 
     const parts = location.pathname.split('/').filter(Boolean);
-    const username = parts[0] === 'u' && /^[a-z0-9_]{1,20}$/.test(parts[1] ?? '') ? parts[1] : null;
+    // Usernames default to the email's local part, so allow dots, plus signs and
+    // capitals; just decode whatever the segment holds.
+    const decode = s => { try { return decodeURIComponent(s); } catch { return null; } };
+    const rawUser = parts[0] === 'u' && parts[1] ? decode(parts[1]) : null;
+    const username = rawUser && rawUser.length <= 64 ? rawUser : null;
     const puzzleId = parts[0] === 'puzzle' && /^[0-9a-f-]{36}$/i.test(parts[1] ?? '') ? parts[1] : null;
 
     if (username) {
       show('invite');
-      document.getElementById('invite-open').href = `puzzlebee://add/${username}`;
+      document.getElementById('invite-open').href = `puzzlebee://add/${encodeURIComponent(username)}`;
       const initial = username[0].toUpperCase();
       text('invite-avatar', initial);
-      fetchOne(`profiles?username=eq.${username}&select=username,display_name,avatar_url`).then(p => {
+      fetchOne(`profiles?username=eq.${encodeURIComponent(username)}&select=username,display_name,avatar_url`).then(p => {
         if (!p) return;
         const name = p.display_name || p.username;
         document.title = `${name} on PuzzleBee`;
