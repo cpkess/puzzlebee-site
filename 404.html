@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PuzzleBee</title>
+  <meta name="description" content="PuzzleBee is the home for your jigsaw puzzles: track what you own, time your solves and see what your friends finish.">
+  <link rel="stylesheet" href="/assets/style.css">
+  <style>
+    /* GitHub Pages serves this page for every path it doesn't know, so it is
+       also the landing page for the links the app shares:
+         /u/<username>   a friend invite
+         /puzzle/<id>    a shared puzzle
+       Anything else is a plain "not found". */
+    .landing { padding: 72px 0 96px; border-top: none; }
+    .card {
+      max-width: 440px; margin: 0 auto; text-align: center;
+      background: var(--cream50); border: 1px solid var(--border);
+      border-radius: 24px; padding: 32px 24px;
+    }
+    .card h1 { font-size: clamp(1.75rem, 6vw, 2.25rem); margin: 16px 0 8px; }
+    .card p { margin-bottom: 24px; }
+    .avatar {
+      width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
+      background: linear-gradient(135deg, #F4D58F, #C8861E);
+      display: flex; align-items: center; justify-content: center;
+      font: italic 500 2rem Georgia, serif; color: var(--ink); overflow: hidden;
+    }
+    .avatar img, .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
+    .art {
+      width: 100%; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden;
+      background: linear-gradient(135deg, #F4D58F, #E8A93C);
+    }
+    .meta { font: 0.75rem/1.4 ui-monospace, Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); }
+    .actions { display: flex; flex-direction: column; gap: 12px; }
+    .actions .btn { justify-content: center; }
+    .hint { font-size: 0.8125rem; color: var(--ink3); margin: 16px 0 0 !important; }
+    [hidden] { display: none !important; }
+  </style>
+</head>
+<body>
+
+  <nav class="nav">
+    <div class="nav__inner">
+      <a href="/" class="nav__wordmark"><svg width="22" height="24" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
+      <div class="nav__links">
+        <a href="/features.html" class="nav__link--hide">Features</a>
+        <a href="/about.html" class="nav__link--hide">About</a>
+        <a href="https://apps.apple.com/app/id6776897922" class="nav__cta">Download</a>
+      </div>
+    </div>
+  </nav>
+
+  <section class="landing">
+    <div class="container--narrow">
+
+      <!-- A friend invite -->
+      <div class="card" id="invite" hidden>
+        <div class="avatar" id="invite-avatar" aria-hidden="true"></div>
+        <h1 id="invite-title">Join me on PuzzleBee</h1>
+        <p id="invite-body">Track the puzzles you own, time your solves, and see what your friends finish.</p>
+        <div class="actions">
+          <a class="btn btn--honey" id="invite-open" href="#">Add as a friend in PuzzleBee</a>
+          <a class="btn btn--ghost" href="https://apps.apple.com/app/id6776897922">Get PuzzleBee</a>
+        </div>
+        <p class="hint">Already have the app? The first button opens it.</p>
+      </div>
+
+      <!-- A shared puzzle -->
+      <div class="card" id="puzzle" hidden>
+        <div class="art" id="puzzle-art"></div>
+        <h1 id="puzzle-title">A puzzle on PuzzleBee</h1>
+        <p class="meta" id="puzzle-meta"></p>
+        <div class="actions">
+          <a class="btn btn--honey" id="puzzle-open" href="#">Open in PuzzleBee</a>
+          <a class="btn btn--ghost" href="https://apps.apple.com/app/id6776897922">Get PuzzleBee</a>
+        </div>
+        <p class="hint">Already have the app? The first button opens it.</p>
+      </div>
+
+      <!-- Anything else -->
+      <div class="card" id="missing" hidden>
+        <h1>That page isn't here</h1>
+        <p>It may have moved, or the link may be mistyped.</p>
+        <div class="actions">
+          <a class="btn btn--honey" href="/">Go to the home page</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="footer__inner">
+      <a href="/" class="footer__wordmark"><svg width="18" height="20" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
+      <div class="footer__links">
+        <a href="/features.html">Features</a>
+        <a href="/about.html">About</a>
+        <a href="/privacy.html">Privacy</a>
+        <a href="/terms.html">Terms</a>
+        <a href="mailto:support@puzzlebee.app">Contact</a>
+      </div>
+      <p class="footer__copy">© 2026 PuzzleBee</p>
+    </div>
+  </footer>
+
+  <script>
+    // Public, read-only details for the card. Profiles and published puzzles
+    // are readable by anyone; this is the publishable key the app ships with.
+    const SUPABASE_URL = 'https://slepfovcxclwpcuqmhql.supabase.co';
+    const SUPABASE_KEY = 'sb_publishable_Hhyy2Et18FafeDZjZrn4kg_KdFeN7AF';
+
+    const show = id => { document.getElementById(id).hidden = false; };
+    const text = (id, value) => { document.getElementById(id).textContent = value; };
+
+    async function fetchOne(path) {
+      try {
+        const res = await fetch(`${SUPABASE_URL}/rest/v1/${path}`, {
+          headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}` },
+        });
+        if (!res.ok) return null;
+        const rows = await res.json();
+        return rows[0] ?? null;
+      } catch { return null; }
+    }
+
+    function image(container, url, alt) {
+      if (!url || !/^https:\/\//.test(url)) return;
+      const img = document.createElement('img');
+      // Box art is hotlinked from retailer CDNs, some of which refuse requests
+      // that carry another site's referrer.
+      img.referrerPolicy = 'no-referrer';
+      img.src = url; img.alt = alt;
+      img.onerror = () => img.remove();
+      container.replaceChildren(img);
+    }
+
+    const parts = location.pathname.split('/').filter(Boolean);
+    // Usernames default to the email's local part, so allow dots, plus signs and
+    // capitals; just decode whatever the segment holds.
+    const decode = s => { try { return decodeURIComponent(s); } catch { return null; } };
+    const rawUser = parts[0] === 'u' && parts[1] ? decode(parts[1]) : null;
+    const username = rawUser && rawUser.length <= 64 ? rawUser : null;
+    const puzzleId = parts[0] === 'puzzle' && /^[0-9a-f-]{36}$/i.test(parts[1] ?? '') ? parts[1] : null;
+
+    if (username) {
+      show('invite');
+      document.getElementById('invite-open').href = `puzzlebee://add/${encodeURIComponent(username)}`;
+      const initial = username[0].toUpperCase();
+      text('invite-avatar', initial);
+      fetchOne(`profiles?username=eq.${encodeURIComponent(username)}&select=username,display_name,avatar_url`).then(p => {
+        if (!p) return;
+        const name = p.display_name || p.username;
+        document.title = `${name} on PuzzleBee`;
+        text('invite-title', `${name} invited you to PuzzleBee`);
+        text('invite-body', `Add ${name.split(' ')[0]} as a friend to see what they're puzzling and cheer on their finishes.`);
+        text('invite-avatar', (name.trim()[0] || initial).toUpperCase());
+        image(document.getElementById('invite-avatar'), p.avatar_url, '');
+      });
+    } else if (puzzleId) {
+      show('puzzle');
+      document.getElementById('puzzle-open').href = `puzzlebee://puzzle/${puzzleId}`;
+      fetchOne(`puzzles?id=eq.${puzzleId}&status=eq.published&select=title,brand,piece_count,image_url`).then(p => {
+        if (!p) return;
+        document.title = `${p.title} on PuzzleBee`;
+        text('puzzle-title', p.title);
+        text('puzzle-meta', [p.brand, p.piece_count ? `${p.piece_count.toLocaleString()} pieces` : null].filter(Boolean).join(' · '));
+        image(document.getElementById('puzzle-art'), p.image_url, `The box art for ${p.title}`);
+      });
+    } else {
+      document.title = 'Page not found — PuzzleBee';
+      show('missing');
+    }
+  </script>
+</body>
+</html>
