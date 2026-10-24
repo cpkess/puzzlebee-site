@@ -1,0 +1,13 @@
+{
+  "applinks": {
+    "details": [
+      {
+        "appIDs": ["WZJ4ZPRH72.com.puzzlebee.app"],
+        "components": [
+          { "/": "/puzzle/*", "comment": "A shared puzzle" },
+          { "/": "/u/*", "comment": "A friend invite" }
+        ]
+      }
+    ]
+  }
+}

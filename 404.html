@@ -6,12 +6,17 @@
   <title>PuzzleBee</title>
   <meta name="description" content="PuzzleBee is the home for your jigsaw puzzles: track what you own, time your solves and see what your friends finish.">
   <link rel="stylesheet" href="/assets/style.css">
+  <!-- Safari's PuzzleBee banner. Its Open button also turns links back on for
+       anyone who once chose "Open in Safari" over the app. -->
+  <meta name="apple-itunes-app" content="app-id=6776897922">
   <style>
     /* GitHub Pages serves this page for every path it doesn't know, so it is
        also the landing page for the links the app shares:
          /u/<username>   a friend invite
          /puzzle/<id>    a shared puzzle
-       Anything else is a plain "not found". */
+       Anything else is a plain "not found".
+       With the app installed, iOS opens those two links in it directly (see
+       /.well-known/apple-app-site-association), so this page is the fallback. */
     .landing { padding: 72px 0 96px; border-top: none; }
     .card {
       max-width: 440px; margin: 0 auto; text-align: center;
