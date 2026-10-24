@@ -950,7 +950,8 @@ async function toggleAdmin(id, checkbox, username) {
     checkbox.checked = !isAdmin;
     return;
   }
-  const { error } = await sb.from('profiles').update({ is_admin: isAdmin }).eq('id', id);
+  // is_admin is locked against direct updates; this function checks the caller is an admin and logs the change.
+  const { error } = await sb.rpc('admin_set_admin', { p_user_id: id, p_is_admin: isAdmin });
   if (error) {
     showToast(error.message, 'error');
     checkbox.checked = !isAdmin;
