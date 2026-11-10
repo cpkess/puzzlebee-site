@@ -3,123 +3,132 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>About — PuzzleBee</title>
-  <meta name="description" content="Why we built PuzzleBee — a jigsaw puzzle tracking app made by puzzle collectors, for puzzle collectors.">
+  <title>About · PuzzleBee</title>
+  <meta name="description" content="Why PuzzleBee exists: an independent jigsaw puzzle app made by a puzzle collector, for puzzlers.">
+  <link rel="canonical" href="https://puzzlebee.app/about.html">
+  <meta name="theme-color" content="#FBF7EE">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-latin-500-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PuzzleBee">
+  <meta property="og:url" content="https://puzzlebee.app/about.html">
+  <meta property="og:title" content="About · PuzzleBee">
+  <meta property="og:description" content="Why PuzzleBee exists: an independent jigsaw puzzle app made by a puzzle collector, for puzzlers.">
+  <meta property="og:image" content="https://puzzlebee.app/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PuzzleBee on iPhone: a home for your jigsaw puzzles. Coming soon to the App Store.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/style.css">
   <style>
-    .page-hero { padding: 72px 0 56px; }
-    .about-body { max-width: 680px; }
+    .page-hero { padding: 80px 0 40px; border-top: none; }
     .about-body p { font-size: 1.0625rem; line-height: 1.8; margin-bottom: 20px; }
-    .about-body h2 { margin: 48px 0 16px; }
+    .about-body h2 { margin: 52px 0 16px; font-size: clamp(1.625rem, 3.4vw, 2.125rem); }
     .callout {
-      background: var(--honey-soft); border: 1px solid rgba(232,169,60,.3);
-      border-radius: 16px; padding: 24px 28px; margin: 36px 0;
+      background: var(--honey-mist); border: 1px solid rgba(232,169,60,.35);
+      border-radius: 20px; padding: 28px 32px; margin: 8px 0 40px;
     }
-    .callout p { margin: 0; font-size: 1.0625rem; line-height: 1.7; color: var(--ink2); }
+    .callout p { margin: 0 !important; font-family: var(--font-display); font-style: italic; font-size: 1.375rem !important; line-height: 1.5 !important; color: var(--ink); }
     .team-card {
       display: flex; align-items: center; gap: 20px;
       background: var(--cream50); border: 1px solid var(--border);
-      border-radius: 20px; padding: 24px 28px; margin-top: 32px;
+      border-radius: 20px; padding: 24px 28px; margin-top: 8px;
     }
     .team-card__avatar {
-      width: 56px; height: 56px; border-radius: 50%;
-      background: var(--honey); display: flex; align-items: center; justify-content: center;
-      font-size: 1.5rem; flex-shrink: 0;
+      width: 60px; height: 60px; border-radius: 50%; flex-shrink: 0;
+      background: var(--honey-mist); display: flex; align-items: center; justify-content: center;
     }
-    .team-card__name { font-weight: 700; font-size: 1rem; color: var(--ink); margin-bottom: 4px; }
+    .team-card__avatar img { width: 32px; }
+    .team-card__name { font-weight: 700; font-size: 1rem; color: var(--ink); }
     .team-card__role { font-size: 0.875rem; color: var(--ink3); }
-    .team-card__link { font-size: 0.875rem; color: var(--honey-deep); margin-top: 4px; display: block; }
+    .team-card__link { font-size: 0.875rem; font-weight: 600; }
+    .cta { background: var(--ink); border-top: none; text-align: center; }
+    .cta h2 { color: var(--cream); margin-bottom: 14px; }
+    .cta p { color: rgba(251,247,238,0.72); max-width: 420px; margin: 0 auto 32px; }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
+  <nav class="nav" aria-label="Main">
     <div class="nav__inner">
-      <a href="/" class="nav__wordmark"><svg width="22" height="24" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="26" height="23" alt=""> PuzzleBee</a>
       <div class="nav__links">
         <a href="/features.html" class="nav__link--hide">Features</a>
-        <a href="/about.html" class="nav__link--hide" style="color:var(--ink);font-weight:700;">About</a>
+        <a href="/about.html" class="nav__link--hide" aria-current="page">About</a>
         <a href="/press.html" class="nav__link--hide">Press</a>
-        <a href="https://apps.apple.com/app/id6776897922" class="nav__cta">Download</a>
+        <a href="/support.html" class="nav__link--hide">Support</a>
+        <span class="nav__soon">Coming soon</span>
       </div>
     </div>
   </nav>
 
-  <section class="page-hero" style="border-top:none;">
+  <main>
+  <section class="page-hero">
     <div class="container--narrow">
-      <span class="section-label">About</span>
-      <h1>Built by a puzzle<br>collector, for collectors.</h1>
+      <span class="eyebrow">About</span>
+      <h1>Made by a puzzle collector, for puzzlers.</h1>
     </div>
   </section>
 
   <section style="padding-top:0;border-top:none;">
-    <div class="container--narrow">
-      <div class="about-body">
+    <div class="container--narrow about-body">
+      <div class="callout">
+        <p>"I kept a spreadsheet to track my puzzles. Then I lost the spreadsheet. I built PuzzleBee so I'd never need a spreadsheet again."</p>
+      </div>
 
-        <div class="callout">
-          <p>"I kept a spreadsheet to track my puzzles. Then I lost the spreadsheet. I built PuzzleBee so I'd never need a spreadsheet again."</p>
+      <p>PuzzleBee started with a problem every puzzle collector knows: you buy a puzzle, solve it, and a year later you can't remember if you own it, what you thought of it, or how long it took. You buy the same puzzle twice. You lose track of your wishlist. You forget which ones are still on the shelf.</p>
+      <p>A spreadsheet sort of works, until it doesn't. It can't scan a barcode. It can't time a solve that takes five evenings. It can't tell you which puzzles other people loved, or share your finish with a friend who puzzles too.</p>
+      <p>So we built PuzzleBee: a real app, made for the way people actually puzzle.</p>
+
+      <h2>What makes it different</h2>
+      <p>Most tracking apps are a database with a search box. PuzzleBee is a companion for the whole hobby, from the moment you pick up the box to the moment the last piece goes in.</p>
+      <p>The timer understands that real solves happen across many sittings. The scanner means you never type a piece count again. Reviews come from people who finished the puzzle. And the Hive lets you share with friends without the noise of social media.</p>
+      <p>It's also calm on purpose. There are no ads, no tracking and no marketing notifications. PuzzleBee earns a small commission when you buy a puzzle through some of its store links, and that's it.</p>
+
+      <h2>The puzzle catalog</h2>
+      <p>PuzzleBee launches with nearly 10,000 jigsaw puzzles, each with its maker, piece count and picture, and the catalog grows every week. If you own a puzzle we don't have yet, add it with a photo of the box. We check every one before it appears for everyone else.</p>
+
+      <h2>Who builds it</h2>
+      <div class="team-card">
+        <div class="team-card__avatar"><img src="/assets/img/mark.svg" width="32" height="29" alt=""></div>
+        <div>
+          <div class="team-card__name">Chris Kessler</div>
+          <div class="team-card__role">Founder and developer</div>
+          <a href="mailto:support@puzzlebee.app" class="team-card__link">support@puzzlebee.app</a>
         </div>
+      </div>
+      <p style="margin-top:32px;">PuzzleBee is an independent app made with care and coffee. If you have ideas, complaints, or just want to say hello, write to us. We read every message.</p>
+    </div>
+  </section>
 
-        <p>PuzzleBee started with a problem every serious puzzle collector knows: you buy a puzzle, solve it, and a year later you can't remember if you own it, what you rated it, or how long it took. You do the same puzzle twice. You lose track of your wishlist. You forget which ones are still on the shelf and which are complete.</p>
-
-        <p>The obvious solution — a spreadsheet — sort of works, until it doesn't. It doesn't scan barcodes. It can't time your sessions across multiple sittings. It can't share your finishes with friends who also puzzle.</p>
-
-        <p>So we built PuzzleBee: a real app, built for the way collectors actually puzzle.</p>
-
-        <h2>What makes PuzzleBee different</h2>
-
-        <p>Most tracking apps are designed for one kind of collector: someone who wants a database. PuzzleBee was designed for something more — a companion for the whole puzzle experience, from the moment you pick up the box to the moment the last piece clicks in.</p>
-
-        <p>The timer understands that real solves happen across multiple sittings. The scanner understands that you don't want to type in a title and piece count manually. The Hive feed understands that you want to share with friends without the noise of social media.</p>
-
-        <p>Every feature was either requested by real collectors or built because we needed it ourselves.</p>
-
-        <h2>On the puzzle database</h2>
-
-        <p>PuzzleBee's puzzle database is community-built. When you scan a barcode that isn't in the database yet, you can submit it — with photos, piece count, brand, and title. Once we review and approve it, it becomes available to every PuzzleBee user.</p>
-
-        <p>The goal is a complete, high-quality catalog of every jigsaw puzzle ever made. We're a long way from there, but every submission gets us closer.</p>
-
-        <h2>Who built this</h2>
-
-        <div class="team-card">
-          <div class="team-card__avatar">🐝</div>
-          <div>
-            <div class="team-card__name">Chris Kessler</div>
-            <div class="team-card__role">Founder &amp; Developer</div>
-            <a href="mailto:support@puzzlebee.app" class="team-card__link">support@puzzlebee.app</a>
-          </div>
-        </div>
-
-        <p style="margin-top:32px;">PuzzleBee is an independent app made with care and coffee. If you have ideas, complaints, or just want to say hello, email us — we read every message.</p>
-
+  <section class="cta">
+    <div class="container">
+      <h2>Coming soon to the App Store.</h2>
+      <p>Free on iPhone and iPad. No subscription, no ads.</p>
+      <div class="store-soon store-soon--light" role="img" aria-label="Coming soon to the App Store">
+        <span class="store-soon__sub">Coming soon to the</span>
+        <span class="store-soon__main">App Store</span>
       </div>
     </div>
   </section>
-
-  <section style="background:var(--ink);border-top:none;">
-    <div class="container" style="text-align:center;">
-      <svg width="56" height="61" viewBox="0 0 48 52" fill="none" aria-hidden="true" style="display:block;margin:0 auto 20px;"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg>
-      <h2 style="color:#FBF7EE;margin-bottom:16px;">Download PuzzleBee free</h2>
-      <p style="color:rgba(251,247,238,.65);max-width:380px;margin:0 auto 36px;">Available now on iPhone. No subscription required.</p>
-      <a href="https://apps.apple.com/app/id6776897922" class="badge-appstore">
-        <span><span class="badge-appstore__sub">Download on the</span><span class="badge-appstore__main">App Store</span></span>
-      </a>
-    </div>
-  </section>
+  </main>
 
   <footer class="footer">
     <div class="footer__inner">
-      <a href="/" class="footer__wordmark"><svg width="18" height="20" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
-      <div class="footer__links">
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="22" height="20" alt=""> PuzzleBee</a>
+      <nav class="footer__links" aria-label="Footer">
         <a href="/features.html">Features</a>
         <a href="/about.html">About</a>
         <a href="/press.html">Press</a>
+        <a href="/support.html">Support</a>
         <a href="/privacy.html">Privacy</a>
         <a href="/terms.html">Terms</a>
-        <a href="/support.html">Support</a>
         <a href="mailto:support@puzzlebee.app">Contact</a>
-      </div>
+      </nav>
       <p class="footer__copy">© 2026 PuzzleBee</p>
     </div>
   </footer>

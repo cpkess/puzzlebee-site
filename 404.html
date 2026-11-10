@@ -5,6 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PuzzleBee</title>
   <meta name="description" content="PuzzleBee is the home for your jigsaw puzzles: track what you own, time your solves and see what your friends finish.">
+  <meta name="robots" content="noindex">
+  <meta name="theme-color" content="#FBF7EE">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-latin-500-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PuzzleBee">
+  <meta property="og:url" content="https://puzzlebee.app/">
+  <meta property="og:title" content="PuzzleBee">
+  <meta property="og:description" content="PuzzleBee is the home for your jigsaw puzzles: track what you own, time your solves and see what your friends finish.">
+  <meta property="og:image" content="https://puzzlebee.app/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PuzzleBee on iPhone: a home for your jigsaw puzzles. Coming soon to the App Store.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/style.css">
   <!-- Safari's PuzzleBee banner. Its Open button also turns links back on for
        anyone who once chose "Open in Safari" over the app. -->
@@ -29,29 +47,33 @@
       width: 88px; height: 88px; border-radius: 50%; margin: 0 auto;
       background: linear-gradient(135deg, #F4D58F, #C8861E);
       display: flex; align-items: center; justify-content: center;
-      font: italic 500 2rem Georgia, serif; color: var(--ink); overflow: hidden;
+      font: italic 500 2rem var(--font-display); color: var(--ink); overflow: hidden;
     }
     .avatar img, .art img { width: 100%; height: 100%; object-fit: cover; display: block; }
     .art {
       width: 100%; aspect-ratio: 4 / 3; border-radius: 16px; overflow: hidden;
       background: linear-gradient(135deg, #F4D58F, #E8A93C);
     }
-    .meta { font: 0.75rem/1.4 ui-monospace, Menlo, monospace; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); }
+    .meta { font: 0.75rem/1.4 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); }
     .actions { display: flex; flex-direction: column; gap: 12px; }
     .actions .btn { justify-content: center; }
     .hint { font-size: 0.8125rem; color: var(--ink3); margin: 16px 0 0 !important; }
+    .btn--soon { cursor: default; color: var(--ink3); }
+    .btn--soon:hover { opacity: 1; transform: none; }
     [hidden] { display: none !important; }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
+  <nav class="nav" aria-label="Main">
     <div class="nav__inner">
-      <a href="/" class="nav__wordmark"><svg width="22" height="24" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="26" height="23" alt=""> PuzzleBee</a>
       <div class="nav__links">
         <a href="/features.html" class="nav__link--hide">Features</a>
         <a href="/about.html" class="nav__link--hide">About</a>
-        <a href="https://apps.apple.com/app/id6776897922" class="nav__cta">Download</a>
+        <a href="/press.html" class="nav__link--hide">Press</a>
+        <a href="/support.html" class="nav__link--hide">Support</a>
+        <span class="nav__soon">Coming soon</span>
       </div>
     </div>
   </nav>
@@ -66,7 +88,7 @@
         <p id="invite-body">Track the puzzles you own, time your solves, and see what your friends finish.</p>
         <div class="actions">
           <a class="btn btn--honey" id="invite-open" href="#">Add as a friend in PuzzleBee</a>
-          <a class="btn btn--ghost" href="https://apps.apple.com/app/id6776897922">Get PuzzleBee</a>
+          <span class="btn btn--ghost btn--soon" aria-disabled="true">Coming soon to the App Store</span>
         </div>
         <p class="hint">Already have the app? The first button opens it.</p>
       </div>
@@ -78,7 +100,7 @@
         <p class="meta" id="puzzle-meta"></p>
         <div class="actions">
           <a class="btn btn--honey" id="puzzle-open" href="#">Open in PuzzleBee</a>
-          <a class="btn btn--ghost" href="https://apps.apple.com/app/id6776897922">Get PuzzleBee</a>
+          <span class="btn btn--ghost btn--soon" aria-disabled="true">Coming soon to the App Store</span>
         </div>
         <p class="hint">Already have the app? The first button opens it.</p>
       </div>
@@ -97,15 +119,16 @@
 
   <footer class="footer">
     <div class="footer__inner">
-      <a href="/" class="footer__wordmark"><svg width="18" height="20" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
-      <div class="footer__links">
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="22" height="20" alt=""> PuzzleBee</a>
+      <nav class="footer__links" aria-label="Footer">
         <a href="/features.html">Features</a>
         <a href="/about.html">About</a>
+        <a href="/press.html">Press</a>
+        <a href="/support.html">Support</a>
         <a href="/privacy.html">Privacy</a>
         <a href="/terms.html">Terms</a>
-        <a href="/support.html">Support</a>
         <a href="mailto:support@puzzlebee.app">Contact</a>
-      </div>
+      </nav>
       <p class="footer__copy">© 2026 PuzzleBee</p>
     </div>
   </footer>
