@@ -3,221 +3,203 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Press — PuzzleBee</title>
-  <meta name="description" content="Press kit for PuzzleBee — app icon, screenshots, descriptions, and brand guidelines for journalists and creators.">
+  <title>Press kit · PuzzleBee</title>
+  <meta name="description" content="PuzzleBee press kit: app facts, descriptions, the app icon, logo, brand colors and full-resolution iPhone and iPad screenshots.">
+  <link rel="canonical" href="https://puzzlebee.app/press.html">
+  <meta name="theme-color" content="#FBF7EE">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-latin-500-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PuzzleBee">
+  <meta property="og:url" content="https://puzzlebee.app/press.html">
+  <meta property="og:title" content="Press kit · PuzzleBee">
+  <meta property="og:description" content="PuzzleBee press kit: app facts, descriptions, the app icon, logo, brand colors and full-resolution iPhone and iPad screenshots.">
+  <meta property="og:image" content="https://puzzlebee.app/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PuzzleBee on iPhone: a home for your jigsaw puzzles. Coming soon to the App Store.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/style.css">
   <style>
-    .page-hero { padding: 72px 0 56px; }
-    .press-section { margin-bottom: 56px; }
-    .press-section h2 { margin-bottom: 20px; }
-    .description-block {
-      background: var(--cream50); border: 1px solid var(--border);
-      border-radius: 16px; padding: 24px 28px; margin-bottom: 16px;
+    .page-hero { padding: 80px 0 40px; border-top: none; }
+    .page-hero .section-body { margin-top: 18px; }
+    .press-section { margin-bottom: 64px; }
+    .press-section > h2 { margin-bottom: 20px; font-size: clamp(1.625rem, 3.4vw, 2.125rem); }
+    .fact-list { list-style: none; border-top: 1px solid var(--border); }
+    .fact-list li { display: grid; grid-template-columns: 170px 1fr; gap: 12px; padding: 13px 0; border-bottom: 1px solid var(--border); font-size: 0.9375rem; }
+    .fact-list__label { font: 500 0.75rem/1.9 var(--font-mono); letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink3); }
+    .fact-list__val { color: var(--ink); }
+    .description-block { background: var(--cream50); border: 1px solid var(--border); border-radius: 18px; padding: 24px 28px; margin-bottom: 16px; }
+    .description-block__label { font: 500 0.6875rem/1.4 var(--font-mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--honey-deep); margin-bottom: 12px; }
+    .description-block p { font-size: 0.9375rem; line-height: 1.7; }
+    .description-block p + p { margin-top: 12px; }
+    .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 16px; }
+    .asset-card { background: var(--cream50); border: 1px solid var(--border); border-radius: 18px; padding: 20px; text-align: center; display: flex; flex-direction: column; align-items: center; }
+    .asset-card__preview { width: 96px; height: 96px; margin-bottom: 14px; display: flex; align-items: center; justify-content: center; }
+    .asset-card__preview img { max-height: 96px; width: auto; }
+    .asset-card__preview--icon img { border-radius: 22px; box-shadow: 0 6px 18px rgba(60,40,10,0.12); }
+    .asset-card__name { font-size: 0.9375rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+    .asset-card__meta { font-size: 0.8125rem; color: var(--ink3); margin-bottom: 14px; }
+    .asset-card__dl { margin-top: auto; font-size: 0.8125rem; font-weight: 700; color: var(--honey-deep); border: 1px solid rgba(143,94,16,.3); border-radius: 999px; padding: 6px 14px; }
+    .asset-card__dl:hover { background: var(--honey-mist); text-decoration: none; }
+    .shots { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; margin-top: 20px; }
+    .shots img { border-radius: 10px; border: 1px solid var(--border); }
+    .color-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); gap: 12px; }
+    .swatch-card { display: flex; align-items: center; gap: 14px; background: var(--cream50); border: 1px solid var(--border); border-radius: 14px; padding: 12px 14px; }
+    .swatch-card__dot { width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0; border: 1px solid var(--border); }
+    .swatch-card__name { font-size: 0.875rem; font-weight: 700; color: var(--ink); }
+    .swatch-card__hex { font: 500 0.75rem/1.4 var(--font-mono); color: var(--ink3); }
+    .type-list { display: grid; gap: 12px; }
+    .type-row { display: flex; align-items: baseline; justify-content: space-between; gap: 16px; flex-wrap: wrap; background: var(--cream50); border: 1px solid var(--border); border-radius: 14px; padding: 16px 20px; }
+    .type-row__sample { font-size: 1.5rem; color: var(--ink); }
+    .type-row__use { font-size: 0.8125rem; color: var(--ink3); }
+    @media (max-width: 640px) {
+      .fact-list li { grid-template-columns: 1fr; gap: 2px; }
+      .shots { grid-template-columns: repeat(3, 1fr); }
+      .description-block { padding: 20px; }
     }
-    .description-block__label {
-      font-size: 0.6875rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-      color: var(--honey-deep); margin-bottom: 10px;
-    }
-    .description-block p { font-size: 0.9375rem; line-height: 1.7; margin: 0; }
-    .color-grid { display: flex; flex-wrap: wrap; gap: 16px; }
-    .color-swatch-card {
-      display: flex; align-items: center; gap: 14px;
-      background: var(--cream50); border: 1px solid var(--border);
-      border-radius: 12px; padding: 12px 16px; min-width: 200px;
-    }
-    .color-swatch-card__dot {
-      width: 40px; height: 40px; border-radius: 10px; flex-shrink: 0;
-      border: 1px solid var(--border);
-    }
-    .color-swatch-card__name { font-size: 0.875rem; font-weight: 700; color: var(--ink); }
-    .color-swatch-card__hex { font-size: 0.75rem; color: var(--ink3); font-family: 'SF Mono', 'Fira Code', monospace; }
-    .asset-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 16px; }
-    .asset-card {
-      background: var(--cream50); border: 1px solid var(--border);
-      border-radius: 16px; padding: 20px; text-align: center;
-    }
-    .asset-card__preview {
-      width: 80px; height: 80px; background: var(--honey-soft); border-radius: 20px;
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.5rem; margin: 0 auto 14px;
-    }
-    .asset-card__name { font-size: 0.875rem; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
-    .asset-card__meta { font-size: 0.75rem; color: var(--ink3); margin-bottom: 12px; }
-    .asset-card__dl {
-      display: inline-block; font-size: 0.75rem; font-weight: 700;
-      color: var(--honey-deep); border: 1px solid rgba(196,131,26,.3);
-      border-radius: 999px; padding: 4px 12px;
-      text-decoration: none;
-    }
-    .asset-card__dl:hover { background: var(--honey-soft); text-decoration: none; }
-    .fact-list { list-style: none; padding: 0; }
-    .fact-list li {
-      display: flex; align-items: baseline; gap: 12px;
-      padding: 12px 0; border-bottom: 1px solid var(--border);
-      font-size: 0.9375rem;
-    }
-    .fact-list li:last-child { border-bottom: none; }
-    .fact-list__label { font-weight: 700; color: var(--ink); min-width: 160px; flex-shrink: 0; }
-    .fact-list__val { color: var(--ink2); }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
+  <nav class="nav" aria-label="Main">
     <div class="nav__inner">
-      <a href="/" class="nav__wordmark"><svg width="22" height="24" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="26" height="23" alt=""> PuzzleBee</a>
       <div class="nav__links">
         <a href="/features.html" class="nav__link--hide">Features</a>
         <a href="/about.html" class="nav__link--hide">About</a>
-        <a href="/press.html" class="nav__link--hide" style="color:var(--ink);font-weight:700;">Press</a>
-        <a href="https://apps.apple.com/app/id6776897922" class="nav__cta">Download</a>
+        <a href="/press.html" class="nav__link--hide" aria-current="page">Press</a>
+        <a href="/support.html" class="nav__link--hide">Support</a>
+        <span class="nav__soon">Coming soon</span>
       </div>
     </div>
   </nav>
 
-  <section class="page-hero" style="border-top:none;">
+  <main>
+  <section class="page-hero">
     <div class="container--narrow">
-      <span class="section-label">Press Kit</span>
-      <h1>PuzzleBee media resources.</h1>
-      <p class="section-body" style="margin-top:16px;">For press inquiries, contact <a href="mailto:press@puzzlebee.app">press@puzzlebee.app</a>. All assets on this page are free to use in editorial coverage.</p>
+      <span class="eyebrow">Press kit</span>
+      <h1>PuzzleBee for press.</h1>
+      <p class="section-body">Everything you need to write about PuzzleBee. All assets on this page are free to use in editorial coverage. For interviews or anything else, write to <a href="mailto:press@puzzlebee.app">press@puzzlebee.app</a>.</p>
     </div>
   </section>
 
   <section style="border-top:none;padding-top:0;">
     <div class="container--narrow">
 
-      <!-- App facts -->
       <div class="press-section">
         <h2>App facts</h2>
         <ul class="fact-list">
           <li><span class="fact-list__label">Name</span><span class="fact-list__val">PuzzleBee</span></li>
-          <li><span class="fact-list__label">Category</span><span class="fact-list__val">Lifestyle / Productivity</span></li>
-          <li><span class="fact-list__label">Platform</span><span class="fact-list__val">iOS (iPhone) — iOS 17+</span></li>
-          <li><span class="fact-list__label">Price</span><span class="fact-list__val">Free — no subscription, no in-app purchases</span></li>
+          <li><span class="fact-list__label">One line</span><span class="fact-list__val">Track, rate and share jigsaw puzzles</span></li>
+          <li><span class="fact-list__label">Availability</span><span class="fact-list__val">Coming soon to the App Store</span></li>
+          <li><span class="fact-list__label">Devices</span><span class="fact-list__val">iPhone and iPad</span></li>
+          <li><span class="fact-list__label">Category</span><span class="fact-list__val">Lifestyle</span></li>
+          <li><span class="fact-list__label">Price</span><span class="fact-list__val">Free. No subscription, no in-app purchases, no ads.</span></li>
+          <li><span class="fact-list__label">Catalog</span><span class="fact-list__val">Nearly 10,000 jigsaw puzzles at launch</span></li>
           <li><span class="fact-list__label">Developer</span><span class="fact-list__val">Chris Kessler, independent</span></li>
-          <li><span class="fact-list__label">Website</span><span class="fact-list__val">puzzlebee.app</span></li>
-          <li><span class="fact-list__label">Contact</span><span class="fact-list__val"><a href="mailto:press@puzzlebee.app">press@puzzlebee.app</a></span></li>
+          <li><span class="fact-list__label">Website</span><span class="fact-list__val"><a href="https://puzzlebee.app">puzzlebee.app</a></span></li>
+          <li><span class="fact-list__label">Press contact</span><span class="fact-list__val"><a href="mailto:press@puzzlebee.app">press@puzzlebee.app</a></span></li>
         </ul>
       </div>
 
-      <!-- App descriptions -->
       <div class="press-section">
-        <h2>App descriptions</h2>
-
+        <h2>Descriptions</h2>
         <div class="description-block">
-          <div class="description-block__label">Short — 1 sentence</div>
-          <p>PuzzleBee is the jigsaw puzzle app for collectors: scan boxes, track your collection, time your solves, and share with friends.</p>
+          <div class="description-block__label">Short</div>
+          <p>PuzzleBee is a home for your jigsaw puzzles: scan a box to add it, time every solve, and see what your friends finish.</p>
         </div>
-
         <div class="description-block">
-          <div class="description-block__label">Medium — 2–3 sentences</div>
-          <p>PuzzleBee is a jigsaw puzzle companion app for serious collectors. Scan any puzzle box barcode to add it to your library, use the built-in multi-session timer to track your solve time, and share finishes with friends in the Hive — a quiet, pressure-free social feed. Free to download, no subscription required.</p>
+          <div class="description-block__label">Medium</div>
+          <p>PuzzleBee puts your jigsaw shelf, solve timer and puzzling friends in one calm app. Scan a box to add it, time every session, and find your next favorite among nearly 10,000 puzzles. It's free, with no ads and no tracking.</p>
         </div>
-
         <div class="description-block">
-          <div class="description-block__label">Long — full App Store description</div>
-          <p>PuzzleBee is the puzzle app collectors have been waiting for. Whether you have 10 puzzles or 500, PuzzleBee brings order to your collection and joy to every solve.</p>
-          <p style="margin-top:12px;"><strong>Scan any puzzle box.</strong> Point your camera at the barcode and PuzzleBee identifies the puzzle instantly — title, brand, piece count, difficulty, and box art pulled in automatically. If a puzzle isn't in our database yet, you can submit it for review.</p>
-          <p style="margin-top:12px;"><strong>Track your collection.</strong> Every puzzle you own lives in one place. Mark puzzles as on the shelf, in progress, or complete. Filter by status. See your history at a glance.</p>
-          <p style="margin-top:12px;"><strong>Time every solve.</strong> Real puzzle solves happen across multiple sittings. Start the timer, pause it, come back — PuzzleBee accumulates an accurate total. When you finish, see how your time compares to the community average.</p>
-          <p style="margin-top:12px;"><strong>Share with the hive.</strong> Follow the friends you puzzle with. The Hive feed shows what they're solving and when they finish. No likes, no comments — just the quiet satisfaction of knowing your friend just finished a 1000-piece at midnight.</p>
-          <p style="margin-top:12px;"><strong>Stay motivated.</strong> Set a yearly puzzle goal and keep your daily solving streak going. Earn achievements that actually feel meaningful.</p>
-          <p style="margin-top:12px;">Free to download. No subscription. No ads. Just a better way to live your puzzle life.</p>
+          <div class="description-block__label">Long</div>
+          <p>PuzzleBee is a home for your jigsaw puzzles: the ones on your shelf, the one on your table right now, and the ones you're dreaming about.</p>
+          <p><strong>Keep your shelf.</strong> Scan a box's barcode to add it in a tap, or search nearly 10,000 puzzles. Sort what you own, what you're solving and what you want, and add a puzzle that isn't in the catalog yet with a photo of the box.</p>
+          <p><strong>Time every solve.</strong> A simple timer pauses and resumes across sessions. See how your time compares with everyone else who finished it, with every solve kept, repeat solves included.</p>
+          <p><strong>Find your next favorite.</strong> Charts of what puzzlers are adding and finishing this month, a daily pick, new arrivals, themes, and recommendations based on the puzzles already on your shelf.</p>
+          <p><strong>Ratings from real puzzlers.</strong> Star ratings and reviews from people who finished the puzzle, with spoiler warnings so nobody gives away the final picture.</p>
+          <p><strong>Puzzle with friends.</strong> The Hive shows what your friends finish, quietly and in order. Cheer them on with a like or a comment, and add friends by username, QR code or link.</p>
+          <p><strong>Watch your year add up.</strong> Streaks, pieces placed and hours puzzled, badges and titles you earn as you go, and a weekly, monthly or yearly goal if you like one.</p>
+          <p>Calm by design: no ads, no tracking, and no marketing notifications. Reminders are optional, and set by you.</p>
         </div>
       </div>
 
-      <!-- Brand colors -->
+      <div class="press-section">
+        <h2>Downloads</h2>
+        <div class="asset-grid">
+          <div class="asset-card">
+            <div class="asset-card__preview asset-card__preview--icon"><img src="/assets/img/icon-192.png" width="96" height="96" alt=""></div>
+            <div class="asset-card__name">App icon</div>
+            <div class="asset-card__meta">PNG, 1024 × 1024</div>
+            <a href="/assets/img/icon-1024.png" class="asset-card__dl" download="puzzlebee-app-icon-1024.png">Download</a>
+          </div>
+          <div class="asset-card">
+            <div class="asset-card__preview"><img src="/assets/img/mark.svg" width="96" height="87" alt=""></div>
+            <div class="asset-card__name">Logo mark</div>
+            <div class="asset-card__meta">SVG, any size</div>
+            <a href="/assets/img/mark.svg" class="asset-card__dl" download="puzzlebee-mark.svg">Download</a>
+          </div>
+          <div class="asset-card">
+            <div class="asset-card__preview"><img src="/assets/img/screens/store-iphone-1-home.webp" width="44" height="96" alt="" style="border-radius:6px;"></div>
+            <div class="asset-card__name">Press kit</div>
+            <div class="asset-card__meta">Icon, logo and 12 screenshots for iPhone and iPad, ZIP, 10 MB</div>
+            <a href="/assets/press/puzzlebee-press-kit.zip" class="asset-card__dl" download>Download</a>
+          </div>
+        </div>
+        <div class="shots" aria-hidden="true">
+          <img src="/assets/img/screens/store-iphone-1-home.webp" width="660" height="1434" loading="lazy" alt="">
+          <img src="/assets/img/screens/store-iphone-2-timer.webp" width="660" height="1434" loading="lazy" alt="">
+          <img src="/assets/img/screens/store-iphone-3-discover.webp" width="660" height="1434" loading="lazy" alt="">
+          <img src="/assets/img/screens/store-iphone-4-reviews.webp" width="660" height="1434" loading="lazy" alt="">
+          <img src="/assets/img/screens/store-iphone-5-hive.webp" width="660" height="1434" loading="lazy" alt="">
+          <img src="/assets/img/screens/store-iphone-6-you.webp" width="660" height="1434" loading="lazy" alt="">
+        </div>
+        <p style="margin-top:16px;font-size:0.875rem;color:var(--ink3);">Screenshots show the real app with sample data and original artwork. Please don't alter the icon or logo, or set them in other colors.</p>
+      </div>
+
       <div class="press-section">
         <h2>Brand colors</h2>
         <div class="color-grid">
-          <div class="color-swatch-card">
-            <div class="color-swatch-card__dot" style="background:#E8A93C;"></div>
-            <div>
-              <div class="color-swatch-card__name">Honey</div>
-              <div class="color-swatch-card__hex">#E8A93C</div>
-            </div>
-          </div>
-          <div class="color-swatch-card">
-            <div class="color-swatch-card__dot" style="background:#C4831A;"></div>
-            <div>
-              <div class="color-swatch-card__name">Honey Deep</div>
-              <div class="color-swatch-card__hex">#C4831A</div>
-            </div>
-          </div>
-          <div class="color-swatch-card">
-            <div class="color-swatch-card__dot" style="background:#211A12;"></div>
-            <div>
-              <div class="color-swatch-card__name">Ink</div>
-              <div class="color-swatch-card__hex">#211A12</div>
-            </div>
-          </div>
-          <div class="color-swatch-card">
-            <div class="color-swatch-card__dot" style="background:#FBF7EE;border-color:var(--border);"></div>
-            <div>
-              <div class="color-swatch-card__name">Cream</div>
-              <div class="color-swatch-card__hex">#FBF7EE</div>
-            </div>
-          </div>
-          <div class="color-swatch-card">
-            <div class="color-swatch-card__dot" style="background:#6B7B5A;"></div>
-            <div>
-              <div class="color-swatch-card__name">Sage</div>
-              <div class="color-swatch-card__hex">#6B7B5A</div>
-            </div>
-          </div>
+          <div class="swatch-card"><div class="swatch-card__dot" style="background:#E8A93C;"></div><div><div class="swatch-card__name">Honey</div><div class="swatch-card__hex">#E8A93C</div></div></div>
+          <div class="swatch-card"><div class="swatch-card__dot" style="background:#F4D58F;"></div><div><div class="swatch-card__name">Honey Soft</div><div class="swatch-card__hex">#F4D58F</div></div></div>
+          <div class="swatch-card"><div class="swatch-card__dot" style="background:#211A12;"></div><div><div class="swatch-card__name">Ink</div><div class="swatch-card__hex">#211A12</div></div></div>
+          <div class="swatch-card"><div class="swatch-card__dot" style="background:#F6EFE0;"></div><div><div class="swatch-card__name">Cream</div><div class="swatch-card__hex">#F6EFE0</div></div></div>
+          <div class="swatch-card"><div class="swatch-card__dot" style="background:#FBF7EE;"></div><div><div class="swatch-card__name">Paper</div><div class="swatch-card__hex">#FBF7EE</div></div></div>
+          <div class="swatch-card"><div class="swatch-card__dot" style="background:#7A8B6B;"></div><div><div class="swatch-card__name">Sage</div><div class="swatch-card__hex">#7A8B6B</div></div></div>
         </div>
       </div>
 
-      <!-- App icon & screenshots -->
       <div class="press-section">
-        <h2>App icon &amp; screenshots</h2>
-        <p style="margin-bottom:20px;font-size:0.9375rem;">For high-resolution assets, email <a href="mailto:press@puzzlebee.app">press@puzzlebee.app</a> with your publication name and a brief description of your coverage.</p>
-        <div class="asset-grid">
-          <div class="asset-card">
-            <div class="asset-card__preview">🐝</div>
-            <div class="asset-card__name">App Icon</div>
-            <div class="asset-card__meta">1024 × 1024 px</div>
-            <a href="mailto:press@puzzlebee.app?subject=PuzzleBee%20Press%20Assets" class="asset-card__dl">Request</a>
-          </div>
-          <div class="asset-card">
-            <div class="asset-card__preview">📱</div>
-            <div class="asset-card__name">Screenshots</div>
-            <div class="asset-card__meta">iPhone 15 Pro</div>
-            <a href="mailto:press@puzzlebee.app?subject=PuzzleBee%20Press%20Assets" class="asset-card__dl">Request</a>
-          </div>
-          <div class="asset-card">
-            <div class="asset-card__preview">🎨</div>
-            <div class="asset-card__name">Brand Pack</div>
-            <div class="asset-card__meta">Logos, wordmark, colors</div>
-            <a href="mailto:press@puzzlebee.app?subject=PuzzleBee%20Press%20Assets" class="asset-card__dl">Request</a>
-          </div>
-        </div>
-      </div>
-
-      <!-- Contact -->
-      <div class="press-section">
-        <h2>Press contact</h2>
-        <div class="card" style="max-width:400px;">
-          <p style="font-size:0.9375rem;margin-bottom:8px;">Chris Kessler<br>Founder, PuzzleBee</p>
-          <a href="mailto:press@puzzlebee.app" style="font-weight:700;font-size:0.9375rem;">press@puzzlebee.app</a>
+        <h2>Typography</h2>
+        <div class="type-list">
+          <div class="type-row"><span class="type-row__sample" style="font-family:var(--font-display);font-style:italic;">Newsreader Italic</span><span class="type-row__use">Headlines</span></div>
+          <div class="type-row"><span class="type-row__sample" style="font-weight:700;">Manrope</span><span class="type-row__use">Text and interface</span></div>
+          <div class="type-row"><span class="type-row__sample" style="font-family:var(--font-mono);font-size:1.125rem;text-transform:uppercase;letter-spacing:.06em;">JetBrains Mono</span><span class="type-row__use">Small labels</span></div>
         </div>
       </div>
 
     </div>
   </section>
+  </main>
 
   <footer class="footer">
     <div class="footer__inner">
-      <a href="/" class="footer__wordmark"><svg width="18" height="20" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
-      <div class="footer__links">
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="22" height="20" alt=""> PuzzleBee</a>
+      <nav class="footer__links" aria-label="Footer">
         <a href="/features.html">Features</a>
         <a href="/about.html">About</a>
         <a href="/press.html">Press</a>
+        <a href="/support.html">Support</a>
         <a href="/privacy.html">Privacy</a>
         <a href="/terms.html">Terms</a>
-        <a href="/support.html">Support</a>
         <a href="mailto:support@puzzlebee.app">Contact</a>
-      </div>
+      </nav>
       <p class="footer__copy">© 2026 PuzzleBee</p>
     </div>
   </footer>

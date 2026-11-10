@@ -3,74 +3,82 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Features — PuzzleBee</title>
-  <meta name="description" content="Everything in PuzzleBee: scan, track, time, share, discover. A full walkthrough of features built for jigsaw puzzle collectors.">
+  <title>Features · PuzzleBee</title>
+  <meta name="description" content="Everything in PuzzleBee 1.0: barcode scanning, a solve timer that spans sessions, charts and a daily pick, honest reviews, a quiet friends feed, streaks, badges and goals.">
+  <link rel="canonical" href="https://puzzlebee.app/features.html">
+  <meta name="theme-color" content="#FBF7EE">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <link rel="preload" href="/assets/fonts/manrope-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/newsreader-latin-500-italic.woff2" as="font" type="font/woff2" crossorigin>
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="PuzzleBee">
+  <meta property="og:url" content="https://puzzlebee.app/features.html">
+  <meta property="og:title" content="Features · PuzzleBee">
+  <meta property="og:description" content="Everything in PuzzleBee 1.0: barcode scanning, a solve timer that spans sessions, charts and a daily pick, honest reviews, a quiet friends feed, streaks, badges and goals.">
+  <meta property="og:image" content="https://puzzlebee.app/assets/img/og.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="PuzzleBee on iPhone: a home for your jigsaw puzzles. Coming soon to the App Store.">
+  <meta name="twitter:card" content="summary_large_image">
   <link rel="stylesheet" href="/assets/style.css">
   <style>
-    .page-hero { padding: 72px 0 56px; }
-    .feature-row {
-      display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
-      padding: 64px 0;
-    }
-    .feature-row--flip { direction: rtl; }
-    .feature-row--flip > * { direction: ltr; }
-    .feature-row__text h2 { margin-bottom: 14px; }
-    .feature-row__text p { margin-bottom: 14px; font-size: 1.0625rem; line-height: 1.7; }
-    .feature-row__visual {
-      display: flex; justify-content: center; align-items: center;
-      background: var(--cream50); border: 1px solid var(--border);
-      border-radius: 24px; padding: 32px; min-height: 280px;
-    }
-    .feature-detail { display: flex; flex-direction: column; gap: 12px; width: 100%; }
-    .detail-item {
-      background: white; border: 1px solid var(--border); border-radius: 12px;
-      padding: 14px 16px; display: flex; align-items: center; gap: 12px;
-    }
-    .detail-item__icon { font-size: 1.25rem; flex-shrink: 0; }
-    .detail-item__text { font-size: 0.875rem; font-weight: 600; color: var(--ink); }
-    .detail-item__sub  { font-size: 0.75rem; color: var(--ink3); margin-top: 2px; }
-    @media(max-width:700px) {
-      .feature-row { grid-template-columns: 1fr; gap: 32px; }
-      .feature-row--flip { direction: ltr; }
-    }
+    .page-hero { padding: 80px 0 24px; border-top: none; }
+    .page-hero .section-body { margin-top: 18px; font-size: 1.125rem; }
+    .rows section { padding: 80px 0; }
+    .extras { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px; margin-top: 44px; }
+    .extras .card { padding: 24px; }
+    .extras h3 { font-size: 1rem; margin-bottom: 6px; }
+    .extras p { font-size: 0.9375rem; color: var(--ink3); }
+    .cta { background: var(--ink); border-top: none; text-align: center; }
+    .cta h2 { color: var(--cream); margin-bottom: 14px; }
+    .cta p { color: rgba(251,247,238,0.72); max-width: 420px; margin: 0 auto 32px; }
+    @media (max-width: 640px) { .rows section { padding: 56px 0; } .page-hero { padding: 56px 0 8px; } }
   </style>
 </head>
 <body>
 
-  <nav class="nav">
+  <nav class="nav" aria-label="Main">
     <div class="nav__inner">
-      <a href="/" class="nav__wordmark"><svg width="22" height="24" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="26" height="23" alt=""> PuzzleBee</a>
       <div class="nav__links">
-        <a href="/features.html" class="nav__link--hide" style="color:var(--ink);font-weight:700;">Features</a>
+        <a href="/features.html" class="nav__link--hide" aria-current="page">Features</a>
         <a href="/about.html" class="nav__link--hide">About</a>
         <a href="/press.html" class="nav__link--hide">Press</a>
-        <a href="https://apps.apple.com/app/id6776897922" class="nav__cta">Download</a>
+        <a href="/support.html" class="nav__link--hide">Support</a>
+        <span class="nav__soon">Coming soon</span>
       </div>
     </div>
   </nav>
 
-  <section class="page-hero" style="border-top:none;">
+  <main>
+  <section class="page-hero">
     <div class="container--narrow">
-      <span class="section-label">Features</span>
-      <h1>Built for the way<br>collectors actually puzzle.</h1>
-      <p class="section-body" style="margin-top:16px;font-size:1.125rem;">Every feature in PuzzleBee exists because puzzle collectors asked for it, or because we needed it ourselves.</p>
+      <span class="eyebrow">Features</span>
+      <h1>Built for the way puzzlers actually puzzle.</h1>
+      <p class="section-body">Six things PuzzleBee does well, from the moment you pick up a box to the moment the last piece goes in.</p>
     </div>
   </section>
 
-  <section>
+  <div class="rows">
+  <section style="border-top:none;">
     <div class="container">
       <div class="feature-row">
         <div class="feature-row__text">
-          <span class="section-label">Scanning</span>
-          <h2>Scan any puzzle box in seconds</h2>
-          <p>Open the scanner, point it at the barcode on any puzzle box, and PuzzleBee identifies it instantly. Title, brand, piece count, difficulty, and box art — all pulled in automatically.</p>
-          <p>If the puzzle isn't in our database yet, you can submit it with photos. Once approved, it's available to every PuzzleBee user.</p>
+          <span class="eyebrow">Keep your shelf</span>
+          <h2>Your shelf, kept tidy.</h2>
+          <p>Every puzzle you own, the one on your table right now, and the ones you're dreaming about, in one place.</p>
+          <ul class="ticks">
+            <li>Scan a box's barcode to add it in a tap, or search nearly 10,000 puzzles</li>
+            <li>Sort what you own, what you're solving and what you want</li>
+            <li>Add a puzzle we don't have yet with a photo of the box</li>
+          </ul>
         </div>
-        <div class="feature-row__visual">
-          <div class="feature-detail">
-            <div class="detail-item"><span class="detail-item__icon">📦</span><div><div class="detail-item__text">Ravensburger — Starry Night</div><div class="detail-item__sub">1000 pc · Medium</div></div></div>
-            <div class="detail-item" style="background:var(--honey-soft);border-color:rgba(232,169,60,.3);"><span class="detail-item__icon">✅</span><div><div class="detail-item__text">Found in database</div><div class="detail-item__sub">Tap to add to collection</div></div></div>
-          </div>
+        <div class="feature-row__visual phone-stage">
+          <img src="/assets/img/screens/iphone-1-home-720.webp" width="720" height="1532" srcset="/assets/img/screens/iphone-1-home-360.webp 360w, /assets/img/screens/iphone-1-home-720.webp 720w" sizes="(max-width: 860px) 70vw, 380px" loading="lazy"
+               alt="The home screen: the puzzle in progress, a streak, and puzzles to continue">
         </div>
       </div>
     </div>
@@ -80,16 +88,18 @@
     <div class="container">
       <div class="feature-row feature-row--flip">
         <div class="feature-row__text">
-          <span class="section-label">Collection</span>
-          <h2>Your collection, finally organized</h2>
-          <p>Every puzzle you own lives in PuzzleBee. Mark it as on the shelf, actively being solved, or complete. Filter your collection by status and see your history at a glance.</p>
-          <p>Each puzzle shows its status, your solve time, and how your time compares to the community average.</p>
+          <span class="eyebrow">Time every solve</span>
+          <h2>A timer that waits for you.</h2>
+          <p>Real puzzles take more than one sitting. Start the timer when you sit down, pause it when you get up, and pick up where you left off tomorrow.</p>
+          <ul class="ticks">
+            <li>A simple timer that pauses and resumes across sessions</li>
+            <li>See how your time compares with everyone else who finished it</li>
+            <li>Your solve history kept for every puzzle, including repeat solves</li>
+          </ul>
         </div>
-        <div class="feature-row__visual">
-          <div class="feature-detail">
-            <div class="detail-item"><span class="detail-item__icon">🗂</span><div><div class="detail-item__text">47 puzzles in collection</div><div class="detail-item__sub">12 complete · 2 in progress · 33 shelf</div></div></div>
-            <div class="detail-item"><span class="detail-item__icon">✅</span><div><div class="detail-item__text">Solved 12 puzzles</div><div class="detail-item__sub">Total: 187 hours solving</div></div></div>
-          </div>
+        <div class="feature-row__visual phone-stage">
+          <img src="/assets/img/screens/iphone-2-timer-720.webp" width="720" height="1532" srcset="/assets/img/screens/iphone-2-timer-360.webp 360w, /assets/img/screens/iphone-2-timer-720.webp 720w" sizes="(max-width: 860px) 70vw, 380px" loading="lazy"
+               alt="A puzzle page with pieces, average time and rating, and the solve timer paused">
         </div>
       </div>
     </div>
@@ -99,16 +109,18 @@
     <div class="container">
       <div class="feature-row">
         <div class="feature-row__text">
-          <span class="section-label">Timer</span>
-          <h2>A timer that understands puzzle sessions</h2>
-          <p>Real puzzle solves happen across multiple sittings. PuzzleBee's timer works the way you do — start it when you sit down, pause it when you get up, and it accumulates an accurate total.</p>
-          <p>When you're done, mark it solved and see your time alongside the community average for that puzzle.</p>
+          <span class="eyebrow">Discover</span>
+          <h2>Find your next favorite.</h2>
+          <p>Never run out of ideas for the next box. Discover always has somewhere else to go.</p>
+          <ul class="ticks">
+            <li>Charts of what puzzlers are adding and finishing this month</li>
+            <li>A daily pick, new arrivals and themes to browse</li>
+            <li>Recommendations based on the puzzles already on your shelf</li>
+          </ul>
         </div>
-        <div class="feature-row__visual">
-          <div class="feature-detail">
-            <div class="detail-item"><span class="detail-item__icon">⏱</span><div><div class="detail-item__text">Current session: 1h 23m</div><div class="detail-item__sub">Total across sessions: 4h 07m</div></div></div>
-            <div class="detail-item"><span class="detail-item__icon">📊</span><div><div class="detail-item__text">Community avg: 5h 30m</div><div class="detail-item__sub">You're 1h 23m ahead of avg</div></div></div>
-          </div>
+        <div class="feature-row__visual phone-stage">
+          <img src="/assets/img/screens/iphone-3-discover-720.webp" width="720" height="1532" srcset="/assets/img/screens/iphone-3-discover-360.webp 360w, /assets/img/screens/iphone-3-discover-720.webp 720w" sizes="(max-width: 860px) 70vw, 380px" loading="lazy"
+               alt="Discover: a featured puzzle, Popular This Month and New Arrivals">
         </div>
       </div>
     </div>
@@ -118,15 +130,18 @@
     <div class="container">
       <div class="feature-row feature-row--flip">
         <div class="feature-row__text">
-          <span class="section-label">The Hive</span>
-          <h2>A social feed that doesn't feel like social media</h2>
-          <p>Follow the friends you actually puzzle with. The Hive feed shows what they're solving and when they finish — no likes, no comments, no noise. Just the quiet satisfaction of knowing your friend just finished a 1000-piece at midnight.</p>
+          <span class="eyebrow">Ratings and reviews</span>
+          <h2>Ratings from real puzzlers.</h2>
+          <p>Know about the puzzle dust and the satisfying cut before you buy, from people who actually finished it.</p>
+          <ul class="ticks">
+            <li>Star ratings and reviews from people who finished the puzzle</li>
+            <li>Spoiler warnings, so nobody gives away the final picture</li>
+            <li>Mark the reviews that helped you</li>
+          </ul>
         </div>
-        <div class="feature-row__visual">
-          <div class="feature-detail">
-            <div class="detail-item"><span class="detail-item__icon">🐝</span><div><div class="detail-item__text">Sarah finished <em>Autumn Forest</em></div><div class="detail-item__sub">3h 42m · 500 pc · 2h ago</div></div></div>
-            <div class="detail-item"><span class="detail-item__icon">🐝</span><div><div class="detail-item__text">Mike added <em>The Great Wave</em></div><div class="detail-item__sub">Ravensburger · 1000 pc · yesterday</div></div></div>
-          </div>
+        <div class="feature-row__visual phone-stage">
+          <img src="/assets/img/screens/iphone-4-reviews-720.webp" width="720" height="1532" srcset="/assets/img/screens/iphone-4-reviews-360.webp 360w, /assets/img/screens/iphone-4-reviews-720.webp 720w" sizes="(max-width: 860px) 70vw, 380px" loading="lazy"
+               alt="A puzzle's 4.5 star rating breakdown and reviews from other puzzlers">
         </div>
       </div>
     </div>
@@ -136,43 +151,86 @@
     <div class="container">
       <div class="feature-row">
         <div class="feature-row__text">
-          <span class="section-label">Goals &amp; Streaks</span>
-          <h2>Stay motivated all year long</h2>
-          <p>Set a yearly puzzle goal — 100, 365, 500, or 1000 pieces solved — and PuzzleBee tracks your progress. Keep your daily solving streak going to earn achievements that actually feel meaningful.</p>
+          <span class="eyebrow">The Hive</span>
+          <h2>Puzzle with friends.</h2>
+          <p>A feed of what your friends finish, quietly and in order. No algorithm, no strangers, no noise.</p>
+          <ul class="ticks">
+            <li>See what your friends finish, and how long it took them</li>
+            <li>Cheer them on with a like or a comment</li>
+            <li>Add friends by username, QR code or link</li>
+          </ul>
         </div>
-        <div class="feature-row__visual">
-          <div class="feature-detail">
-            <div class="detail-item"><span class="detail-item__icon">🔥</span><div><div class="detail-item__text">14 day streak</div><div class="detail-item__sub">One more piece today keeps it warm.</div></div></div>
-            <div class="detail-item"><span class="detail-item__icon">🎯</span><div><div class="detail-item__text">Goal: 365 puzzles this year</div><div class="detail-item__sub">47 solved · 318 to go</div></div></div>
-          </div>
+        <div class="feature-row__visual phone-stage">
+          <img src="/assets/img/screens/iphone-5-hive-720.webp" width="720" height="1532" srcset="/assets/img/screens/iphone-5-hive-360.webp 360w, /assets/img/screens/iphone-5-hive-720.webp 720w" sizes="(max-width: 860px) 70vw, 380px" loading="lazy"
+               alt="The Hive: friends' finished puzzles with likes and comments">
         </div>
       </div>
     </div>
   </section>
 
-  <section style="background:var(--ink);border-top:none;">
-    <div class="container" style="text-align:center;">
-      <svg width="56" height="61" viewBox="0 0 48 52" fill="none" aria-hidden="true" style="display:block;margin:0 auto 20px;"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg>
-      <h2 style="color:#FBF7EE;margin-bottom:16px;">Download PuzzleBee free</h2>
-      <p style="color:rgba(251,247,238,.65);max-width:380px;margin:0 auto 36px;">Available now on iPhone. No subscription required.</p>
-      <a href="https://apps.apple.com/app/id6776897922" class="badge-appstore">
-        <span><span class="badge-appstore__sub">Download on the</span><span class="badge-appstore__main">App Store</span></span>
-      </a>
+  <section>
+    <div class="container">
+      <div class="feature-row feature-row--flip">
+        <div class="feature-row__text">
+          <span class="eyebrow">Your year</span>
+          <h2>Watch your year add up.</h2>
+          <p>Every finish counts toward something, without turning your hobby into a chore.</p>
+          <ul class="ticks">
+            <li>Streaks, pieces placed and hours puzzled</li>
+            <li>Badges and titles you earn as you go</li>
+            <li>A weekly, monthly or yearly goal, if you like one</li>
+          </ul>
+        </div>
+        <div class="feature-row__visual phone-stage">
+          <img src="/assets/img/screens/iphone-6-you-720.webp" width="720" height="1532" srcset="/assets/img/screens/iphone-6-you-360.webp 360w, /assets/img/screens/iphone-6-you-720.webp 720w" sizes="(max-width: 860px) 70vw, 380px" loading="lazy"
+               alt="Your profile: streak, puzzles solved, hours puzzling and achievements">
+        </div>
+      </div>
     </div>
   </section>
+
+  <section style="background:var(--cream50);">
+    <div class="container">
+      <div class="center">
+        <span class="eyebrow">And the small things</span>
+        <h2 class="section-title">Details that make it feel right</h2>
+      </div>
+      <div class="extras">
+        <div class="card"><h3>iPhone and iPad</h3><p>Every orientation and Split View on iPad, so it can sit beside the puzzle table.</p></div>
+        <div class="card"><h3>Dark mode</h3><p>A warm dark theme for one more session after everyone's gone to bed.</p></div>
+        <div class="card"><h3>Gentle reminders</h3><p>Optional daily reminders, set by you and scheduled on your device. Nothing else.</p></div>
+        <div class="card"><h3>Sign in your way</h3><p>Sign in with Apple, Google or your email. Delete your account and data from Settings at any time.</p></div>
+        <div class="card"><h3>Where to buy</h3><p>Puzzle pages link to stores that carry them, so your wishlist is one tap from your table.</p></div>
+        <div class="card"><h3>We read every message</h3><p>Tap Help &amp; feedback in Settings and it comes straight to us. <a href="/support.html">Support</a></p></div>
+      </div>
+    </div>
+  </section>
+  </div>
+
+  <section class="cta">
+    <div class="container">
+      <h2>Coming soon to the App Store.</h2>
+      <p>Free on iPhone and iPad. No subscription, no ads.</p>
+      <div class="store-soon store-soon--light" role="img" aria-label="Coming soon to the App Store">
+        <span class="store-soon__sub">Coming soon to the</span>
+        <span class="store-soon__main">App Store</span>
+      </div>
+    </div>
+  </section>
+  </main>
 
   <footer class="footer">
     <div class="footer__inner">
-      <a href="/" class="footer__wordmark"><svg width="18" height="20" viewBox="0 0 48 52" fill="none" aria-hidden="true"><polygon points="24,2 46,14 46,38 24,50 2,38 2,14" stroke="#E8A93C" stroke-width="2"/><polygon points="24,14 36,20 36,32 24,38 12,32 12,20" fill="#E8A93C" opacity="0.4"/></svg> PuzzleBee</a>
-      <div class="footer__links">
+      <a href="/" class="wordmark"><img src="/assets/img/mark.svg" width="22" height="20" alt=""> PuzzleBee</a>
+      <nav class="footer__links" aria-label="Footer">
         <a href="/features.html">Features</a>
         <a href="/about.html">About</a>
         <a href="/press.html">Press</a>
+        <a href="/support.html">Support</a>
         <a href="/privacy.html">Privacy</a>
         <a href="/terms.html">Terms</a>
-        <a href="/support.html">Support</a>
         <a href="mailto:support@puzzlebee.app">Contact</a>
-      </div>
+      </nav>
       <p class="footer__copy">© 2026 PuzzleBee</p>
     </div>
   </footer>
